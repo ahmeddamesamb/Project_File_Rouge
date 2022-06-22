@@ -1,0 +1,10 @@
+controllers:
+    resource: ../src/Controller/
+    type: attribute
+
+authentication_token:
+    path: /login
+    methods: ['POST']
+   
+
+      
