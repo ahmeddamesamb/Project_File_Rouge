@@ -2,24 +2,19 @@
 
 namespace App\Entity;
 
-use App\Repository\LivreurRepository;
 use Doctrine\ORM\Mapping as ORM;
-
+use App\Repository\LivreurRepository;
+use ApiPlatform\Core\Annotation\ApiResource;
+#[ApiResource()]
 #[ORM\Entity(repositoryClass: LivreurRepository::class)]
-class Livreur
+class Livreur extends User
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
-    private $id;
+ 
 
     #[ORM\Column(type: 'string', length: 255)]
     private $matriculeMoto;
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
+ 
 
     public function getMatriculeMoto(): ?string
     {

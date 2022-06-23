@@ -2,11 +2,14 @@
 
 namespace App\Entity;
 
-use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use App\Repository\UserRepository;
+use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Serializer\Annotation\SerializedName;
 
+#[ApiResource()]
 #[ORM\Table(name: '`user`')]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\InheritanceType("JOINED")]
@@ -37,7 +40,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: 'smallint',options:["default"=>1])]
     protected $etat;
+    #[SerializedName("password")]
+    protected $PlainPassword;
 
+    #[ORM\Column(type: 'string', length: 255)]
+    protected $token;
+
+    #[ORM\Column(type: 'boolean')]
+    protected $is_enable;
+
+    #[ORM\Column(type: 'datetime')]
+    protected $expireAt;
     public function getId(): ?int
     {
         return $this->id;
@@ -140,6 +153,54 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setEtat(int $etat): self
     {
         $this->etat = $etat;
+
+        return $this;
+    }
+
+       public function getPlainPassword(): ?string
+    {
+        return $this->PlainPassword;
+    }
+
+    public function setPlainPassword(string $PlainPassword): self
+    {
+        $this->PlainPassword = $PlainPassword;
+
+        return $this;
+    }
+
+    public function getToken(): ?string
+    {
+        return $this->token;
+    }
+
+    public function setToken(string $token): self
+    {
+        $this->token = $token;
+
+        return $this;
+    }
+
+    public function isIsEnable(): ?bool
+    {
+        return $this->is_enable;
+    }
+
+    public function setIsEnable(bool $is_enable): self
+    {
+        $this->is_enable = $is_enable;
+
+        return $this;
+    }
+
+    public function getExpireAt(): ?\DateTimeInterface
+    {
+        return $this->expireAt;
+    }
+
+    public function setExpireAt(\DateTimeInterface $expireAt): self
+    {
+        $this->expireAt = $expireAt;
 
         return $this;
     }
