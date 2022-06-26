@@ -2,12 +2,13 @@
 
 namespace App\Entity;
 
+use Datetime;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Serializer\Annotation\SerializedName;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 #[ApiResource()]
 #[ORM\Table(name: '`user`')]
@@ -16,7 +17,7 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
 #[ORM\DiscriminatorColumn(name:"role",type:"string")]
 #[ORM\DiscriminatorMap(["client"=>"Client","livreur"=>"Livreur","gestionaire"=>"Gestionaire"])]
 
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+ class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -51,6 +52,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: 'datetime')]
     protected $expireAt;
+
+    #[ORM\Column(type: 'string', length: 255)]
+    protected $telephone;
+
+    public function __construct(){
+
+        $this->is_enable = false;
+        $this->token();
+        $table= get_called_class();
+        $table= explode('\\', $table);
+        $table= strtoupper($table[2]);
+        $this->roles[]='ROLE_'.$table;
+    }
+    public function token(){
+      $this->token = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode(random_bytes(128)));
+      $this->expireAt = new \Datetime('+1 day');
+    }
     public function getId(): ?int
     {
         return $this->id;
@@ -86,17 +104,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
-
         return array_unique($roles);
     }
-
-    public function setRoles(array $roles): self
-    {
-        $this->roles = $roles;
-
-        return $this;
-    }
-
+  
     /**
      * @see PasswordAuthenticatedUserInterface
      */
@@ -180,7 +190,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
-
     public function isIsEnable(): ?bool
     {
         return $this->is_enable;
@@ -201,6 +210,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setExpireAt(\DateTimeInterface $expireAt): self
     {
         $this->expireAt = $expireAt;
+
+        return $this;
+    }
+
+    public function getTelephone(): ?string
+    {
+        return $this->telephone;
+    }
+
+    public function setTelephone(string $telephone): self
+    {
+        $this->telephone = $telephone;
 
         return $this;
     }

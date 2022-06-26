@@ -2,26 +2,26 @@
 
 namespace App\Repository;
 
-use App\Entity\Prenom;
+use App\Entity\Produit;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Prenom>
+ * @extends ServiceEntityRepository<Produit>
  *
- * @method Prenom|null find($id, $lockMode = null, $lockVersion = null)
- * @method Prenom|null findOneBy(array $criteria, array $orderBy = null)
- * @method Prenom[]    findAll()
- * @method Prenom[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Produit|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Produit|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Produit[]    findAll()
+ * @method Produit[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class PrenomRepository extends ServiceEntityRepository
+class ProduitRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Prenom::class);
+        parent::__construct($registry, Produit::class);
     }
 
-    public function add(Prenom $entity, bool $flush = false): void
+    public function add(Produit $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
 
@@ -30,7 +30,7 @@ class PrenomRepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(Prenom $entity, bool $flush = false): void
+    public function remove(Produit $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
 
@@ -40,7 +40,7 @@ class PrenomRepository extends ServiceEntityRepository
     }
 
 //    /**
-//     * @return Prenom[] Returns an array of Prenom objects
+//     * @return Produit[] Returns an array of Produit objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -54,7 +54,7 @@ class PrenomRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?Prenom
+//    public function findOneBySomeField($value): ?Produit
 //    {
 //        return $this->createQueryBuilder('p')
 //            ->andWhere('p.exampleField = :val')
