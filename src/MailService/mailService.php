@@ -19,11 +19,7 @@ class mailService{
         ->from("MamadouMbelle@gmail.com")
         ->to($data->getEmail())
         ->subject("Creation compte")
-        ->html($this->environement->render('vue/vue.html.twig',[
-            'tab'=> $data->getPrenom(),
-            'token'=>$data->getToken(),
-        ]))       
-           ;
+        ->html($this->environement->render('vue/vue.html.twig',compact('data')));
         $this->mailler->send($email);
     }
 

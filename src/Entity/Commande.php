@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\CommandeRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CommandeRepository::class)]
@@ -35,6 +37,27 @@ class Commande
 
     #[ORM\Column(type: 'integer')]
     private $numeroTicket;
+
+    #[ORM\ManyToOne(targetEntity: Gestionaire::class, inversedBy: 'commandes')]
+    private $gestionaire;
+
+    #[ORM\ManyToOne(targetEntity: Livraison::class, inversedBy: 'commandes')]
+    private $livraison;
+
+    #[ORM\ManyToOne(targetEntity: Client::class, inversedBy: 'commandes')]
+    private $client;
+
+    #[ORM\ManyToMany(targetEntity: Produit::class, inversedBy: 'commandes')]
+    private $produits;
+
+    #[ORM\OneToMany(mappedBy: 'commande', targetEntity: Burger::class)]
+    private $burgers;
+
+    public function __construct()
+    {
+        $this->produits = new ArrayCollection();
+        $this->burgers = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -124,4 +147,95 @@ class Commande
 
         return $this;
     }
+
+    public function getGestionaire(): ?Gestionaire
+    {
+        return $this->gestionaire;
+    }
+
+    public function setGestionaire(?Gestionaire $gestionaire): self
+    {
+        $this->gestionaire = $gestionaire;
+
+        return $this;
+    }
+
+    public function getLivraison(): ?Livraison
+    {
+        return $this->livraison;
+    }
+
+    public function setLivraison(?Livraison $livraison): self
+    {
+        $this->livraison = $livraison;
+
+        return $this;
+    }
+
+    public function getClient(): ?Client
+    {
+        return $this->client;
+    }
+
+    public function setClient(?Client $client): self
+    {
+        $this->client = $client;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Produit>
+     */
+    public function getProduits(): Collection
+    {
+        return $this->produits;
+    }
+
+    public function addProduit(Produit $produit): self
+    {
+        if (!$this->produits->contains($produit)) {
+            $this->produits[] = $produit;
+        }
+
+        return $this;
+    }
+
+    public function removeProduit(Produit $produit): self
+    {
+        $this->produits->removeElement($produit);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Burger>
+     */
+    public function getBurgers(): Collection
+    {
+        return $this->burgers;
+    }
+
+    public function addBurger(Burger $burger): self
+    {
+        if (!$this->burgers->contains($burger)) {
+            $this->burgers[] = $burger;
+            $burger->setCommande($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBurger(Burger $burger): self
+    {
+        if ($this->burgers->removeElement($burger)) {
+            // set the owning side to null (unless already changed)
+            if ($burger->getCommande() === $this) {
+                $burger->setCommande(null);
+            }
+        }
+
+        return $this;
+    }
+
 }

@@ -8,20 +8,11 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: FriteRepository::class)]
 #[ApiResource]
-class Frite
+class Frite extends Produit
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
-    private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
     private $portionFrite;
-
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
 
     public function getPortionFrite(): ?string
     {

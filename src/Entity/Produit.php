@@ -4,14 +4,16 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\ProduitRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ApiResource]
 #[ORM\Table(name: '`produit`')]
 #[ORM\Entity(repositoryClass: ProduitRepository::class)]
-// #[ORM\InheritanceType("JOINED")]
-// #[ORM\DiscriminatorColumn(name:"desc",type:"string")]
-// #[ORM\DiscriminatorMap(["complement"=>"Complement","menu"=>"Menu","burger"=>"Burger"])]
+#[ORM\InheritanceType("JOINED")]
+#[ORM\DiscriminatorColumn(name:"type",type:"string")]
+#[ORM\DiscriminatorMap(["boisson"=>"Boisson","menu"=>"Menu","burger"=>"Burger","frite"=>"Frite"])]
 class Produit
 {
     #[ORM\Id]
@@ -32,7 +34,18 @@ class Produit
     protected $prix;
 
     #[ORM\Column(type: 'boolean')]
-    protected $etatProduit;
+    protected $etatProduit=true;
+
+    #[ORM\ManyToOne(targetEntity: Gestionaire::class, inversedBy: 'produits')]
+    private $gestionaire;
+
+    #[ORM\ManyToMany(targetEntity: Commande::class, mappedBy: 'produits')]
+    private $commandes;
+
+    public function __construct()
+    {
+        $this->commandes = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -98,4 +111,44 @@ class Produit
 
         return $this;
     }
+
+    public function getGestionaire(): ?Gestionaire
+    {
+        return $this->gestionaire;
+    }
+
+    public function setGestionaire(?Gestionaire $gestionaire): self
+    {
+        $this->gestionaire = $gestionaire;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Commande>
+     */
+    public function getCommandes(): Collection
+    {
+        return $this->commandes;
+    }
+
+    public function addCommande(Commande $commande): self
+    {
+        if (!$this->commandes->contains($commande)) {
+            $this->commandes[] = $commande;
+            $commande->addProduit($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommande(Commande $commande): self
+    {
+        if ($this->commandes->removeElement($commande)) {
+            $commande->removeProduit($this);
+        }
+
+        return $this;
+    }
+
 }

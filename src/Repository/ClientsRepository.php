@@ -2,26 +2,26 @@
 
 namespace App\Repository;
 
-use App\Entity\Catalogue;
+use App\Entity\Clients;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Catalogue>
+ * @extends ServiceEntityRepository<Clients>
  *
- * @method Catalogue|null find($id, $lockMode = null, $lockVersion = null)
- * @method Catalogue|null findOneBy(array $criteria, array $orderBy = null)
- * @method Catalogue[]    findAll()
- * @method Catalogue[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Clients|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Clients|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Clients[]    findAll()
+ * @method Clients[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class CatalogueRepository extends ServiceEntityRepository
+class ClientsRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Catalogue::class);
+        parent::__construct($registry, Clients::class);
     }
 
-    public function add(Catalogue $entity, bool $flush = false): void
+    public function add(Clients $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
 
@@ -30,7 +30,7 @@ class CatalogueRepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(Catalogue $entity, bool $flush = false): void
+    public function remove(Clients $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
 
@@ -40,7 +40,7 @@ class CatalogueRepository extends ServiceEntityRepository
     }
 
 //    /**
-//     * @return Catalogue[] Returns an array of Catalogue objects
+//     * @return Clients[] Returns an array of Clients objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -54,7 +54,7 @@ class CatalogueRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?Catalogue
+//    public function findOneBySomeField($value): ?Clients
 //    {
 //        return $this->createQueryBuilder('c')
 //            ->andWhere('c.exampleField = :val')

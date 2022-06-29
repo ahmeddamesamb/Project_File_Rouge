@@ -21,6 +21,9 @@ class Quartier
     #[ORM\Column(type: 'boolean')]
     private $etatQuartier;
 
+    #[ORM\ManyToOne(targetEntity: Zone::class, inversedBy: 'quartiers')]
+    private $zone;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -49,4 +52,17 @@ class Quartier
 
         return $this;
     }
+
+    public function getZone(): ?Zone
+    {
+        return $this->zone;
+    }
+
+    public function setZone(?Zone $zone): self
+    {
+        $this->zone = $zone;
+
+        return $this;
+    }
+
 }

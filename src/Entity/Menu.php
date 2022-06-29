@@ -4,34 +4,28 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\MenuRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: MenuRepository::class)]
 #[ApiResource]
-class Menu
+class Menu extends Produit
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
-    private $id;
-
+  
     #[ORM\Column(type: 'string', length: 255)]
     private $nomMenu;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    private $image;
+    #[ORM\ManyToMany(targetEntity: Burger::class, mappedBy: 'menus')]
+    private $burgers;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    private $description;
 
-    #[ORM\Column(type: 'boolean')]
-    private $etat;
-
-    public function getId(): ?int
+    public function __construct()
     {
-        return $this->id;
+        $this->burgers = new ArrayCollection();
     }
 
+   
     public function getNomMenu(): ?string
     {
         return $this->nomMenu;
@@ -44,39 +38,31 @@ class Menu
         return $this;
     }
 
-    public function getImage(): ?string
+    /**
+     * @return Collection<int, Burger>
+     */
+    public function getBurgers(): Collection
     {
-        return $this->image;
+        return $this->burgers;
     }
 
-    public function setImage(string $image): self
+    public function addBurger(Burger $burger): self
     {
-        $this->image = $image;
+        if (!$this->burgers->contains($burger)) {
+            $this->burgers[] = $burger;
+            $burger->addMenu($this);
+        }
 
         return $this;
     }
 
-    public function getDescription(): ?string
+    public function removeBurger(Burger $burger): self
     {
-        return $this->description;
-    }
-
-    public function setDescription(string $description): self
-    {
-        $this->description = $description;
+        if ($this->burgers->removeElement($burger)) {
+            $burger->removeMenu($this);
+        }
 
         return $this;
     }
 
-    public function isEtat(): ?bool
-    {
-        return $this->etat;
-    }
-
-    public function setEtat(bool $etat): self
-    {
-        $this->etat = $etat;
-
-        return $this;
-    }
 }

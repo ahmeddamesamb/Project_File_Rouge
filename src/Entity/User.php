@@ -4,19 +4,31 @@ namespace App\Entity;
 
 use Datetime;
 use Doctrine\ORM\Mapping as ORM;
+use App\Controller\MailController;
 use App\Repository\UserRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\SerializedName;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
-#[ApiResource()]
+#[ApiResource(
+  collectionOperations:[
+      "get",
+       "post",
+    "validation"=>[
+        "method"=>"patch",
+        "deserialize"=>false,
+        "path"=>"users/validate/{token}",
+        "controller"=>MailController::class
+    ]
+  ]
+)]
 #[ORM\Table(name: '`user`')]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\InheritanceType("JOINED")]
 #[ORM\DiscriminatorColumn(name:"role",type:"string")]
 #[ORM\DiscriminatorMap(["client"=>"Client","livreur"=>"Livreur","gestionaire"=>"Gestionaire"])]
-
  class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -25,22 +37,29 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
     protected $id;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
+    #[Groups(['getretour','postinserer'])] 
     protected $email;
-
+   
     #[ORM\Column(type: 'json')]
     protected $roles = [];
 
     #[ORM\Column(type: 'string')]
+    #[Groups(['postinserer'])] 
+
     protected $password;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['getretour','postinserer'])] 
     protected $prenom;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    protected $nom;
+    #[ORM\Column(type: 'string', length: 255)]  
+    #[Groups(['getretour','postinserer'])] 
+       protected $nom;
 
     #[ORM\Column(type: 'smallint',options:["default"=>1])]
+    #[Groups(['getretour','postinserer'])] 
     protected $etat;
+
     #[SerializedName("password")]
     protected $PlainPassword;
 
@@ -54,20 +73,22 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
     protected $expireAt;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['getretour','postinserer'])] 
     protected $telephone;
 
     public function __construct(){
-
+        $this->expireAt = new \Datetime('+1 day');
+    }
+    public function tabRole(){
         $this->is_enable = false;
-        $this->token();
         $table= get_called_class();
         $table= explode('\\', $table);
         $table= strtoupper($table[2]);
         $this->roles[]='ROLE_'.$table;
+        $this->etat=1;
     }
     public function token(){
-      $this->token = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode(random_bytes(128)));
-      $this->expireAt = new \Datetime('+1 day');
+      $this->token = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode(random_bytes(16)));
     }
     public function getId(): ?int
     {

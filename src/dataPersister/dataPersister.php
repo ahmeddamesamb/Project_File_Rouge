@@ -36,10 +36,13 @@ class dataPersister implements ContextAwareDataPersisterInterface
             $password = $this->encoder->hashPassword($data,$data->getPlainPassword());
             $data->setPassword($password);
             $data->eraseCredentials();
-            $this->entityManager->persist($data);
             
-            $this->entityManager->flush();
+            $data->token();
+            $data->tabRole();
             $this->dataMail->envoiMail($data);
+            $this->entityManager->persist($data);
+            $this->entityManager->flush();
+            //$this->dataMail->envoiMail($data);
         }
     }
 

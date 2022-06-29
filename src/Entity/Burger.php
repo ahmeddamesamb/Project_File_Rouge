@@ -4,24 +4,31 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\BurgerRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: BurgerRepository::class)]
 #[ApiResource]
-class Burger
+class Burger extends Produit
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
-    private $id;
-
+  
     #[ORM\Column(type: 'string', length: 255)]
     private $catrgorie;
 
-    public function getId(): ?int
+    #[ORM\ManyToOne(targetEntity: Commande::class, inversedBy: 'burgers')]
+    private $commande;
+
+    #[ORM\ManyToMany(targetEntity: Menu::class, inversedBy: 'burgers')]
+    private $menus;
+
+    public function __construct()
     {
-        return $this->id;
+        //parent::__construct();
+        $this->menus = new ArrayCollection();
+
     }
+
 
     public function getCatrgorie(): ?string
     {
@@ -34,4 +41,41 @@ class Burger
 
         return $this;
     }
+
+    public function getCommande(): ?Commande
+    {
+        return $this->commande;
+    }
+
+    public function setCommande(?Commande $commande): self
+    {
+        $this->commande = $commande;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Menu>
+     */
+    public function getMenus(): Collection
+    {
+        return $this->menus;
+    }
+
+    public function addMenu(Menu $menu): self
+    {
+        if (!$this->menus->contains($menu)) {
+            $this->menus[] = $menu;
+        }
+
+        return $this;
+    }
+
+    public function removeMenu(Menu $menu): self
+    {
+        $this->menus->removeElement($menu);
+
+        return $this;
+    }
+
 }

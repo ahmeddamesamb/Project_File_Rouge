@@ -1,1 +1,5 @@
-{}
+{% extends 'base.html.twig' %}
+    {% block body %}
+        <h1>Bonjour {{ data.prenom }}  {{ data.nom }}</h1>
+        <p>cliquez <a href="{{ url('api_users_validation_collection',{"token":data.token})}}">ICI</a> pour activer votre compte</p>
+    {% endblock %}
