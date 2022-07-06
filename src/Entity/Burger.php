@@ -2,44 +2,35 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\BurgerRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\BurgerRepository;
+use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\HttpFoundation\Response;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: BurgerRepository::class)]
+#[ORM\HasLifecycleCallbacks]
+
 #[ApiResource]
 class Burger extends Produit
 {
-  
-    #[ORM\Column(type: 'string', length: 255)]
-    private $catrgorie;
 
     #[ORM\ManyToOne(targetEntity: Commande::class, inversedBy: 'burgers')]
     private $commande;
 
-    #[ORM\ManyToMany(targetEntity: Menu::class, inversedBy: 'burgers')]
-    private $menus;
+    #[ORM\OneToMany(mappedBy: 'burger', targetEntity: MenuBurger::class)]
+    private $menuBurgers;
+
+
 
     public function __construct()
     {
-        //parent::__construct();
-        $this->menus = new ArrayCollection();
-
-    }
+        parent::__construct();
+        $this->menuBurgers = new ArrayCollection();
 
 
-    public function getCatrgorie(): ?string
-    {
-        return $this->catrgorie;
-    }
-
-    public function setCatrgorie(string $catrgorie): self
-    {
-        $this->catrgorie = $catrgorie;
-
-        return $this;
     }
 
     public function getCommande(): ?Commande
@@ -55,25 +46,31 @@ class Burger extends Produit
     }
 
     /**
-     * @return Collection<int, Menu>
+     * @return Collection<int, MenuBurger>
      */
-    public function getMenus(): Collection
+    public function getMenuBurgers(): Collection
     {
-        return $this->menus;
+        return $this->menuBurgers;
     }
 
-    public function addMenu(Menu $menu): self
+    public function addMenuBurger(MenuBurger $menuBurger): self
     {
-        if (!$this->menus->contains($menu)) {
-            $this->menus[] = $menu;
+        if (!$this->menuBurgers->contains($menuBurger)) {
+            $this->menuBurgers[] = $menuBurger;
+            $menuBurger->setBurger($this);
         }
 
         return $this;
     }
 
-    public function removeMenu(Menu $menu): self
+    public function removeMenuBurger(MenuBurger $menuBurger): self
     {
-        $this->menus->removeElement($menu);
+        if ($this->menuBurgers->removeElement($menuBurger)) {
+            // set the owning side to null (unless already changed)
+            if ($menuBurger->getBurger() === $this) {
+                $menuBurger->setBurger(null);
+            }
+        }
 
         return $this;
     }

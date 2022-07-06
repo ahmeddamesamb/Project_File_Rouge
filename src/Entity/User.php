@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use Datetime;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Controller\MailController;
 use App\Repository\UserRepository;
@@ -19,10 +21,14 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
     "validation"=>[
         "method"=>"patch",
         "deserialize"=>false,
-        "path"=>"users/validate/{token}",
+        //"path"=>"users/validate/{token}",
         "controller"=>MailController::class
     ]
-  ]
+  ],
+    itemOperations: [
+        "get",
+        "put"
+    ]
 )]
 #[ORM\Table(name: '`user`')]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -34,30 +40,29 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(["write"])]
     protected $id;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
-    #[Groups(['getretour','postinserer'])] 
+   
     protected $email;
    
     #[ORM\Column(type: 'json')]
     protected $roles = [];
 
-    #[ORM\Column(type: 'string')]
-    #[Groups(['postinserer'])] 
+    #[ORM\Column(type: 'string')] 
 
     protected $password;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['getretour','postinserer'])] 
+    
     protected $prenom;
 
     #[ORM\Column(type: 'string', length: 255)]  
-    #[Groups(['getretour','postinserer'])] 
+    
        protected $nom;
 
     #[ORM\Column(type: 'smallint',options:["default"=>1])]
-    #[Groups(['getretour','postinserer'])] 
     protected $etat;
 
     #[SerializedName("password")]
@@ -67,17 +72,19 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
     protected $token;
 
     #[ORM\Column(type: 'boolean')]
+
     protected $is_enable;
 
     #[ORM\Column(type: 'datetime')]
     protected $expireAt;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['getretour','postinserer'])] 
     protected $telephone;
+
 
     public function __construct(){
         $this->expireAt = new \Datetime('+1 day');
+    
     }
     public function tabRole(){
         $this->is_enable = false;
@@ -246,4 +253,5 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
         return $this;
     }
+
 }

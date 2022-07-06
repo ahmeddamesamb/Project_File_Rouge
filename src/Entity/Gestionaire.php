@@ -44,6 +44,7 @@ class Gestionaire extends User
 
     public function __construct()
     {
+        parent::__construct();
         $this->clients = new ArrayCollection();
         $this->livreurs = new ArrayCollection();
         $this->livraisons = new ArrayCollection();

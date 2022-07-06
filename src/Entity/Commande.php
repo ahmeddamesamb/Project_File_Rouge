@@ -2,14 +2,36 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\CommandeRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\CommandeRepository;
+use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\HttpFoundation\Response;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\SerializedName;
 
 #[ORM\Entity(repositoryClass: CommandeRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    collectionOperations:[
+        "get" =>[
+        "status" => Response::HTTP_OK,
+        "normalization_context" =>['groups' => ['boisson:read:simple']]
+    ],
+    "post"=>[
+        "denormalization_context" =>['groups' => ['write']], 
+    ]],
+     itemOperations:[
+        "put"=>[
+            "security"=>"is_granted('ROLE_GESTIONAIRE')",
+            "security_message"=>"Access denied in this ressource"
+        ],
+        "get" =>[
+                "status" => Response::HTTP_OK,
+                "normalization_context" =>['groups' => ['boisson:read:all']],
+        ]
+        ]
+    )]
 class Commande
 {
     #[ORM\Id]
@@ -47,16 +69,20 @@ class Commande
     #[ORM\ManyToOne(targetEntity: Client::class, inversedBy: 'commandes')]
     private $client;
 
-    #[ORM\ManyToMany(targetEntity: Produit::class, inversedBy: 'commandes')]
-    private $produits;
+
 
     #[ORM\OneToMany(mappedBy: 'commande', targetEntity: Burger::class)]
     private $burgers;
 
+    #[ORM\OneToMany(mappedBy: 'commande',cascade:['persist'], targetEntity: LigneCommande::class)]
+    #[Groups(["write",'boisson:read:simple'])]
+    #[SerializedName('Produits')]
+    private $ligneCommandes;
+
     public function __construct()
     {
-        $this->produits = new ArrayCollection();
         $this->burgers = new ArrayCollection();
+        $this->ligneCommandes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -184,30 +210,7 @@ class Commande
         return $this;
     }
 
-    /**
-     * @return Collection<int, Produit>
-     */
-    public function getProduits(): Collection
-    {
-        return $this->produits;
-    }
-
-    public function addProduit(Produit $produit): self
-    {
-        if (!$this->produits->contains($produit)) {
-            $this->produits[] = $produit;
-        }
-
-        return $this;
-    }
-
-    public function removeProduit(Produit $produit): self
-    {
-        $this->produits->removeElement($produit);
-
-        return $this;
-    }
-
+   
     /**
      * @return Collection<int, Burger>
      */
@@ -232,6 +235,36 @@ class Commande
             // set the owning side to null (unless already changed)
             if ($burger->getCommande() === $this) {
                 $burger->setCommande(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, LigneCommande>
+     */
+    public function getLigneCommandes(): Collection
+    {
+        return $this->ligneCommandes;
+    }
+
+    public function addLigneCommande(LigneCommande $ligneCommande): self
+    {
+        if (!$this->ligneCommandes->contains($ligneCommande)) {
+            $this->ligneCommandes[] = $ligneCommande;
+            $ligneCommande->setCommande($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLigneCommande(LigneCommande $ligneCommande): self
+    {
+        if ($this->ligneCommandes->removeElement($ligneCommande)) {
+            // set the owning side to null (unless already changed)
+            if ($ligneCommande->getCommande() === $this) {
+                $ligneCommande->setCommande(null);
             }
         }
 

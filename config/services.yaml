@@ -19,7 +19,7 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
-    App\EventSubscriber\ProduitSubscriber:
+    App\EventSubscriber\UserSubscriber:
         tags:
             - { name: doctrine.event_listener, event: prePersist}
     # add more service definitions when explicit configuration is needed

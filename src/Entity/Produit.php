@@ -7,6 +7,7 @@ use App\Repository\ProduitRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ApiResource]
 #[ORM\Table(name: '`produit`')]
@@ -21,7 +22,7 @@ class Produit
     #[ORM\Column(type: 'integer')]
     protected $id;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected $image;
 
     #[ORM\Column(type: 'string', length: 255)]
@@ -36,15 +37,16 @@ class Produit
     #[ORM\Column(type: 'boolean')]
     protected $etatProduit=true;
 
+
+    #[ORM\OneToMany(mappedBy: 'produit', targetEntity: LigneCommande::class)]
+    private $ligneCommandes;
+
     #[ORM\ManyToOne(targetEntity: Gestionaire::class, inversedBy: 'produits')]
     private $gestionaire;
 
-    #[ORM\ManyToMany(targetEntity: Commande::class, mappedBy: 'produits')]
-    private $commandes;
-
     public function __construct()
     {
-        $this->commandes = new ArrayCollection();
+        $this->ligneCommandes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -112,6 +114,36 @@ class Produit
         return $this;
     }
 
+    /**
+     * @return Collection<int, LigneCommande>
+     */
+    // public function getLigneCommandes(): Collection
+    // {
+    //     return $this->ligneCommandes;
+    // }
+
+    public function addLigneCommande(LigneCommande $ligneCommande): self
+    {
+        if (!$this->ligneCommandes->contains($ligneCommande)) {
+            $this->ligneCommandes[] = $ligneCommande;
+            $ligneCommande->setProduit($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLigneCommande(LigneCommande $ligneCommande): self
+    {
+        if ($this->ligneCommandes->removeElement($ligneCommande)) {
+            // set the owning side to null (unless already changed)
+            if ($ligneCommande->getProduit() === $this) {
+                $ligneCommande->setProduit(null);
+            }
+        }
+
+        return $this;
+    }
+
     public function getGestionaire(): ?Gestionaire
     {
         return $this->gestionaire;
@@ -120,33 +152,6 @@ class Produit
     public function setGestionaire(?Gestionaire $gestionaire): self
     {
         $this->gestionaire = $gestionaire;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Commande>
-     */
-    public function getCommandes(): Collection
-    {
-        return $this->commandes;
-    }
-
-    public function addCommande(Commande $commande): self
-    {
-        if (!$this->commandes->contains($commande)) {
-            $this->commandes[] = $commande;
-            $commande->addProduit($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCommande(Commande $commande): self
-    {
-        if ($this->commandes->removeElement($commande)) {
-            $commande->removeProduit($this);
-        }
 
         return $this;
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\dataPersister;
+namespace App\DataPersister;
 
 use App\Entity\User;
 use App\MailService\mailService;
@@ -42,7 +42,7 @@ class dataPersister implements ContextAwareDataPersisterInterface
             $this->dataMail->envoiMail($data);
             $this->entityManager->persist($data);
             $this->entityManager->flush();
-            //$this->dataMail->envoiMail($data);
+            $this->dataMail->envoiMail($data);
         }
     }
 

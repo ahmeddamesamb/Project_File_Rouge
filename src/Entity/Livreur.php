@@ -20,6 +20,7 @@ class Livreur extends User
 
     public function __construct()
     {
+        parent::__construct();
         $this->matriculeMoto='MAT'.date('YmdHis') ;
     }
 

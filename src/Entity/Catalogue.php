@@ -3,12 +3,12 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\ClientsRepository;
+use App\Repository\CatalogueRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: ClientsRepository::class)]
+#[ORM\Entity(repositoryClass: CatalogueRepository::class)]
 #[ApiResource]
-class Clients
+class Catalogue
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]

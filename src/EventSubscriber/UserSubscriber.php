@@ -9,13 +9,14 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class ProduitSubscriber implements EventSubscriberInterface
+class UserSubscriber implements EventSubscriberInterface
 {
     private ?TokenInterface $token;
 
     public function __construct(TokenStorageInterface $tokenStorage)
     {
         $this->token = $tokenStorage->getToken();
+
     }
     public static function getSubscribedEvents():array{
         return [
@@ -23,7 +24,7 @@ class ProduitSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function getGestionnaire(){
+    public function getUser(){
         if(null === $token = $this->token){
             return null;
         }
@@ -36,7 +37,9 @@ class ProduitSubscriber implements EventSubscriberInterface
     public function prePersist(LifecycleEventArgs $args){
 
         if($args->getObject() instanceof Burger){
-            $args->getObject()->setGestionnaire($this->getGestionnaire());
+
+           # $args->getObject()->setUser($this->getUser());
+
         }
     }
 
