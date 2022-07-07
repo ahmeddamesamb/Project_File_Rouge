@@ -27,14 +27,16 @@ class ServicePrix{
             $prix=0;
                 foreach ($commande->getLigneCommandes() as $menuFrites){
                     $this->prix=$menuFrites->getProduit()->getPrix()*($menuFrites->getQuantite());
+                
                 }
-
-               foreach ($commande->getLigneCommandes() as $menuBoissons){
-                $this->prix=$menuBoissons->getProduit()->getPrix()*($menuBoissons->getQuantite());
-               }
-
-               foreach ($commande->getLigneCommandes() as $menuBurgers){
-                $this->prix=$menuBurgers->getProduit()->getPrix()*($menuBurgers->getQuantite());
+                
+                foreach ($commande->getLigneCommandes() as $menuBoissons){
+                    $this->prix=$menuBoissons->getProduit()->getPrix()*($menuBoissons->getQuantite());
+                }
+                
+                foreach ($commande->getLigneCommandes() as $menuBurgers){
+                    $this->prix=$menuBurgers->getProduit()->getPrix()*($menuBurgers->getQuantite());
+                    
                }
            
 

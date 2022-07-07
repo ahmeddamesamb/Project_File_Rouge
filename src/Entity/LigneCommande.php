@@ -32,9 +32,8 @@ class LigneCommande
     private $produit;
 
     #[ORM\Column(type: 'integer')]
-
-    private $prix;
-
+    private $prix=0;
+    
     public function getId(): ?int
     {
         return $this->id;

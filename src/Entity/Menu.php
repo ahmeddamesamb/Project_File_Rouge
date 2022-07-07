@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\MenuRepository;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\Controller\MenuAddController;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -19,8 +20,12 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
         "status" => Response::HTTP_OK,
         "normalization_context" =>['groups' => ['menu:read:simple']]
     ],
-    "post"=>[
+    "post","postMenu"=>[
         "denormalization_context" =>['groups' => ['write']], 
+        "deserialize"=>false,
+        "controller"=>MenuAddController::class,
+        "method"=>"post",
+        "path"=>"/menu1"
     ]],
      itemOperations:[
         "put"=>[
@@ -33,6 +38,7 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
         ]
         ]
     )]
+
 class Menu extends Produit
 {
     #[Groups(["write",'menu:read:simple'])]
@@ -43,19 +49,16 @@ class Menu extends Produit
     #[ORM\OneToMany(mappedBy: 'menu', targetEntity: MenuBoisson::class)]
         #[SerializedName('Boissons')]
         #[Groups(["write",'menu:read:simple'])]
-
     private $menuBoissons;
 
     #[ORM\OneToMany(mappedBy: 'menu', targetEntity: MenuBurger::class)]
         #[SerializedName('Burgers')]
         #[Groups(["write",'menu:read:simple'])]
-
     private $menuBurgers;
 
     #[ORM\OneToMany(mappedBy: 'menu', targetEntity: MenuFrite::class)]
         #[SerializedName('Frites')]
         #[Groups(["write",'menu:read:simple'])]
-
     private $menuFrites;
 
     public function __construct()
@@ -153,6 +156,30 @@ class Menu extends Produit
         }
 
         return $this;
+    }
+    //**METHODE PERMETTANT D AJOUTER UN BURGER**
+    public function addBurger(Burger $burger,int $qt=1){
+        $Mburg= new MenuBurger();
+        $Mburg->setBurger($burger);
+        $Mburg->setQuantiteBurger($qt);
+        $Mburg->setMenu($this);
+        $this->addMenuBurger($Mburg);
+    }
+    //**METHODE PERMETTANT D AJOUTER UN FRITE**
+    public function addFrite(Frite $frite,int $qt=1){
+        $Mfrit= new MenuFrite();
+        $Mfrit->setFrite($frite);
+        $Mfrit->setQuantiteFrite($qt);
+        $Mfrit->setMenu($this);
+        $this->addMenuFrite($Mfrit);
+    }
+    //**METHODE PERMETTANT D AJOUTER UN BOISSON**
+    public function addBoisson(Boisson $boisson,int $qt=1){
+        $Mboisson= new MenuBoisson();
+        $Mboisson->setBoisson($boisson);
+        $Mboisson->setQuantiteBoisson($qt);
+        $Mboisson->setMenu($this);
+        $this->addMenuBoisson($Mboisson);
     }
    
 }

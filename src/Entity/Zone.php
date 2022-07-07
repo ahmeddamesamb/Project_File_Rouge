@@ -2,14 +2,36 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\ZoneRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\ZoneRepository;
+use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\HttpFoundation\Response;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ZoneRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    collectionOperations:[
+        "get" =>[
+        "status" => Response::HTTP_OK,
+        "normalization_context" =>['groups' => ['zone:read:simple']]
+    ],
+    "post"=>[
+        "denormalization_context" =>['groups' => ['write']], 
+    
+    ]],
+     itemOperations:[
+        "put"=>[
+            "security"=>"is_granted('ROLE_GESTIONAIRE')",
+            "security_message"=>"Access denied in this ressource"
+        ],
+        "get" =>[
+                "status" => Response::HTTP_OK,
+                "normalization_context" =>['groups' => ['zone:read:all']],
+        ]
+        ]
+    )]
 class Zone
 {
     #[ORM\Id]
@@ -18,19 +40,24 @@ class Zone
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(["write",'zone:read:simple'])]
     private $nomZone;
 
     #[ORM\Column(type: 'integer')]
+    #[Groups(["write",'zone:read:simple'])]
     private $coutLivraison;
 
     #[ORM\Column(type: 'boolean')]
-    private $etatZone;
+    private $etatZone=1;
 
     #[ORM\OneToMany(mappedBy: 'zone', targetEntity: Livraison::class)]
+    // #[Groups(["write",'zone:read:simple'])]
     private $livraisons;
 
     #[ORM\OneToMany(mappedBy: 'zone', targetEntity: Quartier::class)]
+
     private $quartiers;
+
 
 
     public function __construct()

@@ -2,17 +2,41 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\QuartierRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\QuartierRepository;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\HttpFoundation\Response;
 
 #[ORM\Entity(repositoryClass: QuartierRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    collectionOperations:[
+        "get" =>[
+        "status" => Response::HTTP_OK,
+        "normalization_context" =>['groups' => ['quartier:read:simple']]
+    ],
+    "post"=>[
+        "denormalization_context" =>['groups' => ['write']], 
+    
+    ]],
+     itemOperations:[
+        "put"=>[
+            "security"=>"is_granted('ROLE_GESTIONAIRE')",
+            "security_message"=>"Access denied in this ressource"
+        ],
+        "get" =>[
+                "status" => Response::HTTP_OK,
+                "normalization_context" =>['groups' => ['quartier:read:all']],
+        ]
+        ]
+    )]
 class Quartier
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+
+
+
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]

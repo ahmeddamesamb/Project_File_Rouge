@@ -13,10 +13,10 @@ class CommandePersister implements ContextAwareDataPersisterInterface
 {
 private  EntityManagerInterface $entityManager;
 private ServicePrix $service;
-    public function __construct( EntityManagerInterface $entityManager,ServicePrix $servic)
+    public function __construct( EntityManagerInterface $entityManager,ServicePrix $service)
     {
       $this->entityManager = $entityManager;
-      $this->service = $servic;
+      $this->service = $service;
     }
 
     /**
@@ -32,12 +32,13 @@ private ServicePrix $service;
      */
     public function persist($sa, array $context = [])
     {
-        if ($this->service->CommandePrix($sa)) {
-            
-            $sa->getLigneCommandes()->setPrix($this->service->CommandePrix($sa));
+        
+        // if ($this->service->CommandePrix($sa)) {     
+        //     $sa->getLigneCommandes()->setPrix($this->service->CommandePrix($sa));
             $this->entityManager->persist($sa);
             $this->entityManager->flush();
-        }
+        // }
+
     }
 
     /**

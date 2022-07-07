@@ -26,13 +26,13 @@ class Produit
     protected $image;
 
     #[ORM\Column(type: 'string', length: 255)]
-    protected $description;
+    protected $description = "Produitde premiere qualité";
 
     #[ORM\Column(type: 'string', length: 255)]
     protected $nom;
 
     #[ORM\Column(type: 'integer')]
-    protected $prix;
+    protected $prix = 3500;
 
     #[ORM\Column(type: 'boolean')]
     protected $etatProduit=true;

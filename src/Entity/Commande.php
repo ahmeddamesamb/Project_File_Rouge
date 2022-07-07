@@ -40,24 +40,24 @@ class Commande
     private $id;
 
     #[ORM\Column(type: 'boolean')]
-    private $etatCommande;
+    private $etatCommande=1;
 
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: 'integer',nullable:true)]
     private $numeroCommande;
 
     #[ORM\Column(type: 'datetime')]
     private $dateCommande;
 
     #[ORM\Column(type: 'boolean')]
-    private $etatPaiement;
+    private $etatPaiement=1;
 
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: 'boolean',nullable:true)]
     private $statutCommande;
 
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: 'integer',nullable:true)]
     private $paiement;
 
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: 'integer',nullable:true)]
     private $numeroTicket;
 
     #[ORM\ManyToOne(targetEntity: Gestionaire::class, inversedBy: 'commandes')]
@@ -81,6 +81,7 @@ class Commande
 
     public function __construct()
     {
+        $this->dateCommande = new \DateTime('now');
         $this->burgers = new ArrayCollection();
         $this->ligneCommandes = new ArrayCollection();
     }

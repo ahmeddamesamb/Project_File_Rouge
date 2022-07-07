@@ -37,8 +37,7 @@ class UserSubscriber implements EventSubscriberInterface
     public function prePersist(LifecycleEventArgs $args){
 
         if($args->getObject() instanceof Burger){
-
-           # $args->getObject()->setUser($this->getUser());
+        $args->getObject()->setUser($this->getUser());
 
         }
     }

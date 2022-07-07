@@ -16,12 +16,12 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 #[ApiResource(
   collectionOperations:[
-      "get",
-       "post",
-    "validation"=>[
+        "get",
+        "post",
+        "validation"=>[
         "method"=>"patch",
         "deserialize"=>false,
-        //"path"=>"users/validate/{token}",
+        "path"=>"users/validate/{token}",
         "controller"=>MailController::class
     ]
   ],
@@ -64,7 +64,6 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
     #[ORM\Column(type: 'smallint',options:["default"=>1])]
     protected $etat;
-
     #[SerializedName("password")]
     protected $PlainPassword;
 
@@ -81,11 +80,6 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
     #[ORM\Column(type: 'string', length: 255)]
     protected $telephone;
 
-
-    public function __construct(){
-        $this->expireAt = new \Datetime('+1 day');
-    
-    }
     public function tabRole(){
         $this->is_enable = false;
         $table= get_called_class();
@@ -96,6 +90,12 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
     }
     public function token(){
       $this->token = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode(random_bytes(16)));
+    }
+
+    public function __construct(){
+        $this->expireAt = new \Datetime('+1 day');
+        $this->tabRole();
+        $this->token();
     }
     public function getId(): ?int
     {
