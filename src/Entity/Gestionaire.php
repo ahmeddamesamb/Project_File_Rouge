@@ -7,23 +7,9 @@ use App\Repository\GestionaireRepository;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Doctrine\Common\Collections\ArrayCollection;
-#[ApiResource(
-    collectionOperations:[
-        'get'=>
-        [
-            'status'=>Response::HTTP_OK,
-            'normalization_context'=>['groups'=>['getretour']]           
-        ],
-        'post',
-        'post_register'=>
-            [
-            'method'=>'post',
-            'path'=>'/register/gestionnaires',
-            'denormalization_context'=>['groups'=>['postinserer']]
-            ]
-        ]
-)]
+#[ApiResource()]
 #[ORM\Entity(repositoryClass: GestionaireRepository::class)]
 class Gestionaire extends User
 {

@@ -37,7 +37,7 @@ class MenuAddController extends AbstractController
         }
         $entityManager->persist($plat);
         $entityManager->flush();
-        return  $this->json('Succes',201);
+        return  $this->json('Succes Insertion Reussit',201);
 
        // ******************************FRITES****************************************//
 

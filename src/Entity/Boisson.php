@@ -11,26 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: BoissonRepository::class)]
-#[ApiResource(
-    collectionOperations:[
-        "get" =>[
-        "status" => Response::HTTP_OK,
-        "normalization_context" =>['groups' => ['boisson:read:simple']]
-    ],
-    "post"=>[
-        "denormalization_context" =>['groups' => ['write']],
-    ]],
-     itemOperations:[
-        "put"=>[
-            "security"=>"is_granted('ROLE_GESTIONAIRE')",
-            "security_message"=>"Access denied in this ressource"
-        ],
-        "get" =>[
-                "status" => Response::HTTP_OK,
-                "normalization_context" =>['groups' => ['boisson:read:all']],
-        ]
-        ]
-    )]
+#[ApiResource()]
 class Boisson extends Produit
 {
 
@@ -40,10 +21,6 @@ class Boisson extends Produit
 
     #[ORM\OneToMany(mappedBy: 'boisson', targetEntity: MenuBoisson::class)]
     private $menuBoissons;
-
-    // #[ORM\Column(type: 'integer')]
-    // #[Groups(["write",'menu:read:simple'])]
-
 
     public function __construct()
     {

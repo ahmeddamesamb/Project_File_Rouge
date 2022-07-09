@@ -4,22 +4,26 @@ namespace App\DataPersister;
 
 use App\Entity\User;
 
+use App\Entity\Client;
+use App\Entity\Livreur;
 use App\MailService\mailService;
 use Doctrine\ORM\EntityManagerInterface;
 use ApiPlatform\Core\DataPersister\ContextAwareDataPersisterInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use App\Service\UserConnect;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class dataPersister implements ContextAwareDataPersisterInterface
 {
     
     public function __construct( EntityManagerInterface $entityManager, 
     UserPasswordHasherInterface $encoder,
-    mailService $dataMail)
+    mailService $dataMail, TokenStorageInterface $token)
     {
         $this->encoder = $encoder;
         $this->entityManager = $entityManager;
         $this->dataMail=$dataMail;
+        $this->token = $token;
+        
     }
 
     /**
@@ -27,7 +31,7 @@ class dataPersister implements ContextAwareDataPersisterInterface
      */
     public function supports($data, array $context = []): bool
     {
-        return $data instanceof User;
+        return $data instanceof Livreur or $data instanceof Client;
     }
 
     /**
@@ -35,12 +39,13 @@ class dataPersister implements ContextAwareDataPersisterInterface
      */
     public function persist($data, array $context = [])
     {
-// dd($data);
+        //    $data->getGestionaire();
+        // setGestionaire($this->token->getToken()->getUser());
         if ($data->getPlainPassword()) {
             $password = $this->encoder->hashPassword($data,$data->getPlainPassword());
             $data->setPassword($password);
             $data->eraseCredentials();
-
+        
             $this->dataMail->envoiMail($data);
             $this->entityManager->persist($data);
             $this->entityManager->flush();

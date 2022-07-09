@@ -17,6 +17,10 @@ class Frite extends Produit
     #[ORM\OneToMany(mappedBy: 'frite', targetEntity: MenuFrite::class)]
     private $menuFrites;
 
+    #[ORM\Column(type: 'string', length: 255)]
+    private $quantiteFrite;
+    
+
     public function __construct()
     {
         parent::__construct();
@@ -24,18 +28,7 @@ class Frite extends Produit
     
     }
 
-    public function getQunatiteFrite(): ?int
-    {
-        return $this->qunatiteFrite;
-    }
-
-    public function setQunatiteFrite(int $qunatiteFrite): self
-    {
-        $this->qunatiteFrite = $qunatiteFrite;
-
-        return $this;
-    }
-
+   
     /**
      * @return Collection<int, MenuFrite>
      */
@@ -62,6 +55,18 @@ class Frite extends Produit
                 $menuFrite->setFrite(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getQuantiteFrite(): ?string
+    {
+        return $this->quantiteFrite;
+    }
+
+    public function setQuantiteFrite(string $quantiteFrite): self
+    {
+        $this->quantiteFrite = $quantiteFrite;
 
         return $this;
     }
