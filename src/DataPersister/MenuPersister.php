@@ -16,7 +16,7 @@ private ServicePrix $service;
     {
       $this->entityManager = $entityManager;
       $this->service = $service;
-      
+
     }
 
     /**
@@ -32,7 +32,8 @@ private ServicePrix $service;
      */
     public function persist($data, array $context = [])
     {
-        dd($data);
+
+    
         if ($this->service->calculeprix($data)) {
             $data->setPrix($this->service->calculeprix($data));
             $this->entityManager->persist($data);

@@ -34,7 +34,7 @@ class ProduitDataPersister implements ContextAwareDataPersisterInterface
      */
     public function persist($data, array $context = [])
     {
-        // dd($data);
+        
         $data->setGestionaire($this->token->getToken()->getUser());
         $this->entityManager->persist($data);
         $this->entityManager->flush();

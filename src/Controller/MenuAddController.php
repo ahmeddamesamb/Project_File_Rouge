@@ -26,45 +26,41 @@ class MenuAddController extends AbstractController
         $plat= new Menu();
         $plat->setNom($content->nom);
         $plat->setImage($content->image);
-       // *****************************BURGERS*****************************************//
-        foreach ($content->burgers as $b) {
+        // *****************************BURGERS*****************************************//
+
+        foreach ($content->Burgers as $b) {
             # code...
             $burger=$bur->find($b->burger);
             if($burger)
             {
                 $plat->addBurger($burger,$b->qt);
             }
-        }
-        $entityManager->persist($plat);
-        $entityManager->flush();
-        return  $this->json('Succes Insertion Reussit',201);
-
-       // ******************************FRITES****************************************//
-
-        foreach ($content->frites as $f) {
-            # code...
-            $frite=$fr->find($f->frite);
-            if($frite)
-            {
-                $plat->addFrite($frite,$f->qt);
-            }
-        }
-        $entityManager->persist($plat);
-        $entityManager->flush();
-        return  $this->json('Succes',201);
-       // ********************************BOISSON**************************************//
-
-        foreach ($content->boissons as $bo) {
-            # code...
-            $boisson=$boi->find($b->boisson);
-            if($boisson)
-            {
-                $plat->addBoisson($boisson,$bo->qt);
-            }
-        }
-        $entityManager->persist($plat);
-        $entityManager->flush();
-        return  $this->json('Succes',201);
+            // ********************************BOISSON**************************************//
         
+             foreach ($content->boissons as $bo) {
+                 # code...
+                 $boisson=$boi->find($b->boisson);
+                 if($boisson)
+                 {
+                     $plat->addBoisson($boisson,$bo->qt);
+                 }
+             }
+             
+             
+         }
+        
+         // ******************************FRITES****************************************//
+         
+       foreach ($content->frites as $f) {
+           # code...
+        $frite=$fr->find($f->frite);
+        if($frite)
+        {
+            $plat->addFrite($frite,$f->qt);
+        }
     }
+    $entityManager->persist($plat);
+             $entityManager->flush();
+             return  $this->json('Succes MMM',201);
+}
 }

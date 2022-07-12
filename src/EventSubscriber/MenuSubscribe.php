@@ -17,7 +17,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class UserSubscriber implements EventSubscriberInterface
+class MenuSubscriber implements EventSubscriberInterface
 {
     private ?TokenInterface $token;
 
@@ -45,7 +45,7 @@ class UserSubscriber implements EventSubscriberInterface
     
     public function prePersist(LifecycleEventArgs $args)
     {
-        if ($args->getObject() instanceof Client or $args->getObject() instanceof Livreur) {
+        if ($args->getObject() instanceof Menu) {
             $args->getObject()->setGestionaire($this->token->getUser());
         }
     }

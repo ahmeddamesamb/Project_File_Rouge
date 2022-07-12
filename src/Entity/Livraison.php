@@ -21,7 +21,7 @@ class Livraison
     private $telephoneLivraison;
 
     #[ORM\Column(type: 'boolean')]
-    private $etatLivraison;
+    private $etatLivraison="0";
 
     #[ORM\ManyToOne(targetEntity: Gestionaire::class, inversedBy: 'livraisons')]
     private $gestionaire;

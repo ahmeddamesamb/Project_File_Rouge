@@ -42,7 +42,7 @@ class Commande
     #[ORM\Column(type: 'boolean')]
     private $etatCommande=1;
 
-    #[ORM\Column(type: 'integer',nullable:true)]
+    #[ORM\Column(type: 'integer',nullable:true,options:["default"=>'NUM'.('Y-m-d H:i:s')])]
     private $numeroCommande;
 
     #[ORM\Column(type: 'datetime')]
@@ -52,7 +52,7 @@ class Commande
     private $etatPaiement=1;
 
     #[ORM\Column(type: 'boolean',nullable:true)]
-    private $statutCommande;
+    private $statutCommande="1";
 
     #[ORM\Column(type: 'integer',nullable:true)]
     private $paiement;
