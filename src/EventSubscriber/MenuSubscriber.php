@@ -12,7 +12,7 @@ use App\Entity\Produit;
 use Doctrine\ORM\Events;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
-use ContainerIz3mso4\getGestionaireRepositoryService;
+// use ContainerIz3mso4\getGestionaireRepositoryService;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
