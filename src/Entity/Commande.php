@@ -42,7 +42,7 @@ class Commande
     #[ORM\Column(type: 'boolean')]
     private $etatCommande=1;
 
-    #[ORM\Column(type: 'integer',nullable:true,options:["default"=>'NUM'.('Y-m-d H:i:s')])]
+    #[ORM\Column(type: 'integer',nullable:true)]
     private $numeroCommande;
 
     #[ORM\Column(type: 'datetime')]
