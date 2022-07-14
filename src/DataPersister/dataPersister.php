@@ -3,7 +3,6 @@
 namespace App\DataPersister;
 
 use App\Entity\User;
-
 use App\Entity\Client;
 use App\Entity\Livreur;
 use App\MailService\mailService;
@@ -26,7 +25,6 @@ class dataPersister implements ContextAwareDataPersisterInterface
         $this->token = $token;
         
     }
-
     /**
      * {@inheritdoc}
      */
@@ -44,8 +42,7 @@ class dataPersister implements ContextAwareDataPersisterInterface
         if ($data->getPlainPassword()) {
             $password = $this->encoder->hashPassword($data,$data->getPlainPassword());
             $data->setPassword($password);
-            $data->eraseCredentials();
-        
+            $data->eraseCredentials();    
             $this->dataMail->envoiMail($data);
             $this->entityManager->persist($data);
             $this->entityManager->flush();

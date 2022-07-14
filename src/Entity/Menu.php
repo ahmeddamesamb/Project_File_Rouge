@@ -9,9 +9,11 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\Controller\MenuAddController;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\Common\Collections\ArrayCollection;
+use PhpParser\Node\Expr\Cast;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints\GreaterThan;
 use Symfony\Component\Serializer\Annotation\SerializedName;
+use Symfony\Component\Validator\Constraints\Cascade;
 
 #[ORM\Entity(repositoryClass: MenuRepository::class)]
 #[ApiResource(
@@ -20,13 +22,10 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
         "status" => Response::HTTP_OK,
         "normalization_context" =>['groups' => ['menu:read:simple']]
     ],
-    "post","postMenu"=>[
+    "post"=>[
         "denormalization_context" =>['groups' => ['write']], 
-        "deserialize"=>false,
-        "controller"=>MenuAddController::class,
-        "method"=>"post",
-        "path"=>"/menu1"
-    ]],
+    ]
+],
      itemOperations:[
         "put"=>[
             "security"=>"is_granted('ROLE_GESTIONAIRE')",
@@ -41,28 +40,31 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
 
 class Menu extends Produit
 {
-    #[Groups(["write",'menu:read:simple'])]
+    #[Groups(['write','menu:read:simple'])]
     protected $nom;
-    #[Groups(["write",'menu:read:simple'])]
+
+    #[Groups(['write','menu:read:simple'])]
     protected $image;
 
-    #[ORM\OneToMany(mappedBy: 'menu', targetEntity: MenuBoisson::class)]
+    #[ORM\OneToMany(mappedBy: 'menu', targetEntity: MenuBoisson::class,cascade:['persist'])]
+    #[Groups(['write','menu:read:simple'])]
         #[SerializedName('Boissons')]
-        #[Groups(["write",'menu:read:simple'])]
+    
     private $menuBoissons;
 
-    #[ORM\OneToMany(mappedBy: 'menu', targetEntity: MenuBurger::class)]
+    #[ORM\OneToMany(mappedBy: 'menu', targetEntity: MenuBurger::class,cascade:['persist'])]
+    #[Groups(['write','menu:read:simple'])]
         #[SerializedName('Burgers')]
-        #[Groups(["write",'menu:read:simple'])]
     private $menuBurgers;
 
-    #[ORM\OneToMany(mappedBy: 'menu', targetEntity: MenuFrite::class)]
+    #[ORM\OneToMany(mappedBy: 'menu', targetEntity: MenuFrite::class,cascade:['persist'])]
+    #[Groups(['write','menu:read:simple'])]
         #[SerializedName('Frites')]
-        #[Groups(["write",'menu:read:simple'])]
     private $menuFrites;
 
     public function __construct()
     {
+        parent::__construct();
         $this->menuBoissons = new ArrayCollection();
         $this->menuBurgers = new ArrayCollection();
         $this->menuFrites = new ArrayCollection();

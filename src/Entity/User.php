@@ -52,16 +52,12 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(["write"])]
     protected $id;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
     #[Groups(["write",'user:read:simple'])] 
-    protected $email;
-   
-    #[ORM\Column(type: 'json')]
-    protected $roles = [];
-
+    protected $email;  
+    
     #[ORM\Column(type: 'string')] 
     #[Groups(["write",'user:read:simple'])] 
     protected $password;
@@ -73,23 +69,27 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
     #[ORM\Column(type: 'string', length: 255)]  
     #[Groups(["write",'user:read:simple'])] 
        protected $nom;
-
-    #[ORM\Column(type: 'smallint',options:["default"=>1])]
-    protected $etat;
-    #[SerializedName("password")]
-    protected $PlainPassword;
-
-    #[ORM\Column(type: 'string', length: 255)]
-    protected $token;
-    #[ORM\Column(type: 'boolean')]
-    protected $is_enable;
-
-    #[ORM\Column(type: 'datetime')]
-    protected $expireAt;
-
     #[ORM\Column(type: 'string', length: 255)]
     #[Groups(["write",'user:read:simple'])] 
     protected $telephone;
+
+    #[ORM\Column(type: 'smallint',options:["default"=>1])]
+    protected $etat;
+
+    #[SerializedName("password")]
+    protected $PlainPassword;
+    
+    #[ORM\Column(type: 'string', length: 255)]
+    protected $token;
+    
+    #[ORM\Column(type: 'boolean')]
+    protected $is_enable;
+    
+    #[ORM\Column(type: 'datetime')]
+    protected $expireAt;
+    
+    #[ORM\Column(type: 'json')]
+    protected $roles = [];
 
     public function tabRole(){
         $this->is_enable = false;
@@ -167,7 +167,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
     public function eraseCredentials()
     {
         // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
+        $this->plainPassword = null;
     }
 
     public function getPrenom(): ?string

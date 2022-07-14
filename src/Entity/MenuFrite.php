@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\MenuFriteRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints\Cascade;
 
 #[ORM\Entity(repositoryClass: MenuFriteRepository::class)]
 #[ApiResource]
@@ -17,15 +18,14 @@ class MenuFrite
     private $id;
 
     #[ORM\Column(type: 'integer')]
-    #[Groups(["write",'menu:read:simple'])]
-
+    #[Groups(['write','menu:read:simple'])]
     private $quantiteFrite;
 
     #[ORM\ManyToOne(targetEntity: Menu::class, inversedBy: 'menuFrites')]
     private $menu;
 
     #[ORM\ManyToOne(targetEntity: Frite::class, inversedBy: 'menuFrites')]
-    #[Groups(["write",'menu:read:simple'])]
+    #[Groups(['write','menu:read:simple'])]
 
     private $frite;
 

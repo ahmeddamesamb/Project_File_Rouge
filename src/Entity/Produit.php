@@ -2,14 +2,35 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\ProduitRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\ProduitRepository;
+use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\HttpFoundation\Response;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-#[ApiResource]
+#[ApiResource(
+    collectionOperations:[
+      "get" =>[
+          "status" => Response::HTTP_OK,
+          "normalization_context" =>['groups' => ['produit:read:simple']]
+      ],
+          "post"=>[
+          "denormalization_context" =>['groups' => ['write']],
+      ]
+    ],
+      itemOperations: [
+          "put"=>[
+              "security"=>"is_granted('ROLE_GESTIONAIRE')",
+              "security_message"=>"Access denied in this ressource"
+          ],
+          "get" =>[
+                  "status" => Response::HTTP_OK,
+                  "normalization_context" =>['groups' => ['produit:read:all']],
+          ]
+      ]
+  )]
 #[ORM\Table(name: '`produit`')]
 #[ORM\Entity(repositoryClass: ProduitRepository::class)]
 #[ORM\InheritanceType("JOINED")]
@@ -20,28 +41,34 @@ class Produit
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    
     protected $id;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected $image;
 
     #[ORM\Column(type: 'string', length: 255)]
+    
     protected $description = "Produitde premiere qualité";
 
     #[ORM\Column(type: 'string', length: 255)]
     protected $nom;
 
     #[ORM\Column(type: 'integer')]
-    protected $prix = 3500;
+    
+    protected $prix ;
 
     #[ORM\Column(type: 'boolean')]
+    
     protected $etatProduit=true;
 
 
     #[ORM\OneToMany(mappedBy: 'produit', targetEntity: LigneCommande::class)]
+    
     private $ligneCommandes;
 
     #[ORM\ManyToOne(targetEntity: Gestionaire::class, inversedBy: 'produits')]
+    
     private $gestionaire;
 
     public function __construct()

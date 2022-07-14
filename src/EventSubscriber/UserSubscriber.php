@@ -2,15 +2,9 @@
 
 namespace App\EventSubscriber;
 
-use App\Entity\Menu;
-use App\Entity\Frite;
-use App\Entity\Burger;
 use App\Entity\Client;
-use App\Entity\Boisson;
 use App\Entity\Livreur;
-use App\Entity\Produit;
 use Doctrine\ORM\Events;
-use Doctrine\Persistence\ObjectManager;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
 use ContainerIz3mso4\getGestionaireRepositoryService;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -23,7 +17,7 @@ class UserSubscriber implements EventSubscriberInterface
 
     public function __construct(TokenStorageInterface $tokenStorage)
     {
-        $this->token = $tokenStorage->getToken();    
+        $this->token = $tokenStorage->getToken();  
     }
     public static function getSubscribedEvents():array{
         return [

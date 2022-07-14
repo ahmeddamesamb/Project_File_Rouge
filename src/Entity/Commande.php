@@ -23,7 +23,7 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
     ]],
      itemOperations:[
         "put"=>[
-            "security"=>"is_granted('ROLE_GESTIONAIRE')",
+            "security"=>"is_granted('ROLE_CLIENT')",
             "security_message"=>"Access denied in this ressource"
         ],
         "get" =>[
@@ -51,8 +51,10 @@ class Commande
     #[ORM\Column(type: 'boolean')]
     private $etatPaiement=1;
 
-    #[ORM\Column(type: 'boolean',nullable:true)]
-    private $statutCommande="1";
+    #[ORM\Column(type: 'string',nullable:true)]
+    #[Groups(["write",'boisson:read:simple'])]
+
+    private $statutCommande;
 
     #[ORM\Column(type: 'integer',nullable:true)]
     private $paiement;
@@ -67,9 +69,9 @@ class Commande
     private $livraison;
 
     #[ORM\ManyToOne(targetEntity: Client::class, inversedBy: 'commandes')]
+    #[Groups(["write",'boisson:read:simple'])]
+
     private $client;
-
-
 
     #[ORM\OneToMany(mappedBy: 'commande', targetEntity: Burger::class)]
     private $burgers;
@@ -139,12 +141,12 @@ class Commande
         return $this;
     }
 
-    public function isStatutCommande(): ?bool
+    public function StatutCommande(): ?string
     {
         return $this->statutCommande;
     }
 
-    public function setStatutCommande(bool $statutCommande): self
+    public function setStatutCommande(string $statutCommande): self
     {
         $this->statutCommande = $statutCommande;
 

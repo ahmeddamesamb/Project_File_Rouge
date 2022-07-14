@@ -33,10 +33,9 @@ class LivraisonPersister implements ContextAwareDataPersisterInterface
     public function persist($data, array $context = [])
     {
     
-          
+              
             $this->entityManager->persist($data);
             $this->entityManager->flush();
-    
     }
 
     /**

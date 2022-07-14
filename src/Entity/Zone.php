@@ -51,11 +51,11 @@ class Zone
     private $etatZone=1;
 
     #[ORM\OneToMany(mappedBy: 'zone', targetEntity: Livraison::class)]
-    // #[Groups(["write",'zone:read:simple'])]
+    #[Groups(["write",'zone:read:simple'])]
     private $livraisons;
 
     #[ORM\OneToMany(mappedBy: 'zone', targetEntity: Quartier::class)]
-
+    #[Groups(["write",'zone:read:simple'])]
     private $quartiers;
 
 
