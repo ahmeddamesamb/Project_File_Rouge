@@ -17,8 +17,7 @@ class LivraisonPersister implements ContextAwareDataPersisterInterface
     {
        
         $this->entityManager = $entityManager;
-    }
-    
+    }   
     /**
      * {@inheritdoc}
      */
@@ -26,14 +25,11 @@ class LivraisonPersister implements ContextAwareDataPersisterInterface
     {
         return $data instanceof Livraison;
     }
-
     /**
      * @param Livraison $data
      */
     public function persist($data, array $context = [])
-    {
-    
-              
+    {      
             $this->entityManager->persist($data);
             $this->entityManager->flush();
     }

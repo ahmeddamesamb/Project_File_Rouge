@@ -42,7 +42,7 @@ class Commande
     #[ORM\Column(type: 'boolean')]
     private $etatCommande=1;
 
-    #[ORM\Column(type: 'integer',nullable:true)]
+    #[ORM\Column(type: 'string',nullable:true)]
     private $numeroCommande;
 
     #[ORM\Column(type: 'datetime')]
@@ -86,6 +86,7 @@ class Commande
         $this->dateCommande = new \DateTime('now');
         $this->burgers = new ArrayCollection();
         $this->ligneCommandes = new ArrayCollection();
+        $this->numeroCommande='NUM_'.time();
     }
 
     public function getId(): ?int
@@ -105,12 +106,12 @@ class Commande
         return $this;
     }
 
-    public function getNumeroCommande(): ?int
+    public function getNumeroCommande(): ?string
     {
         return $this->numeroCommande;
     }
 
-    public function setNumeroCommande(int $numeroCommande): self
+    public function setNumeroCommande(string $numeroCommande): self
     {
         $this->numeroCommande = $numeroCommande;
 
@@ -141,7 +142,7 @@ class Commande
         return $this;
     }
 
-    public function StatutCommande(): ?string
+    public function getStatutCommande(): ?string
     {
         return $this->statutCommande;
     }
