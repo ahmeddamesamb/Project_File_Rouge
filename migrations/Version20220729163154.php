@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20220714151339 extends AbstractMigration
+final class Version20220729163154 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -20,12 +20,16 @@ final class Version20220714151339 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE commande CHANGE numero_commande numero_commande VARCHAR(255) DEFAULT NULL');
+        $this->addSql('ALTER TABLE commande ALTER numero_commande TYPE VARCHAR(255)');
+        $this->addSql('ALTER TABLE commande ALTER numero_commande DROP DEFAULT');
     }
 
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE commande CHANGE numero_commande numero_commande INT DEFAULT NULL');
+        $this->addSql('CREATE SCHEMA heroku_ext');
+        $this->addSql('CREATE SCHEMA public');
+        $this->addSql('ALTER TABLE commande ALTER numero_commande TYPE INT');
+        $this->addSql('ALTER TABLE commande ALTER numero_commande DROP DEFAULT');
     }
 }
