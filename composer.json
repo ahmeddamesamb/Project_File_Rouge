@@ -1,4 +1,4 @@
-R{
+{
     "type": "project",
     "license": "proprietary",
     "minimum-stability": "stable",
@@ -76,9 +76,7 @@ R{
             "requirements-checker": "script"
         },
         "post-install-cmd": [
-            "@auto-scripts",
-            "php bin/console doctrine:schema:update --force",
-            "php bin/console doctrine:fixtures:load --append"
+            "@auto-scripts"
         ],
         "post-update-cmd": [
             "@auto-scripts"
