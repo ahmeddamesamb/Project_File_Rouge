@@ -3,20 +3,27 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\CatalogueRepository;
-use Doctrine\ORM\Mapping as ORM;
+#[ApiResource(
 
-#[ORM\Entity(repositoryClass: CatalogueRepository::class)]
-#[ApiResource]
+    collectionOperations:
+    [
+        "catalogue"=>[
+            "method"=>"get",
+            "path"=>"/catalogue",
+        ]
+        ],
+        itemOperations:[
+            
+        ]
+        ,
+        normalizationContext:
+        [
+            "groups"=>[
+                "catalogue:read"
+            ]
+        ]
+)]
 class Catalogue
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
-    private $id;
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
 }

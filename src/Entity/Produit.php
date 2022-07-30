@@ -17,7 +17,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
           "normalization_context" =>['groups' => ['produit:read:simple']]
       ],
           "post"=>[
-          "denormalization_context" =>['groups' => ['write']],
+          "denormalization_context" =>['groups' => ['produit:write']],
       ]
     ],
       itemOperations: [
@@ -45,21 +45,22 @@ class Produit
     protected $id;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Groups(["produit:write","burger:write"])]
     protected $image;
 
     #[ORM\Column(type: 'string', length: 255)]
-    
+    #[Groups(["produit:write","burger:write"])]
     protected $description = "Produitde premiere qualité";
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(["produit:write","burger:write"])]
     protected $nom;
 
     #[ORM\Column(type: 'integer')]
-    
+    #[Groups(["produit:write","burger:write"])]
     protected $prix ;
 
     #[ORM\Column(type: 'boolean')]
-    
     protected $etatProduit=true;
 
 

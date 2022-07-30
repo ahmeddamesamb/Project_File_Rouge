@@ -32,7 +32,7 @@ private ServicePrix $service;
      */
     public function supports($data, array $context = []): bool
     {
-        return $data instanceof Commande or $data instanceof Burger;
+        return $data instanceof Commande ;
     }
     /**
      * @param Commande $data

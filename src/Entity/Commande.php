@@ -19,7 +19,7 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
         "normalization_context" =>['groups' => ['boisson:read:simple']]
     ],
     "post"=>[
-        "denormalization_context" =>['groups' => ['write']], 
+        "denormalization_context" =>['groups' => ['commande:write']], 
     ]],
      itemOperations:[
         "put"=>[
@@ -52,7 +52,7 @@ class Commande
     private $etatPaiement=1;
 
     #[ORM\Column(type: 'string',nullable:true)]
-    #[Groups(["write",'boisson:read:simple'])]
+    #[Groups(["commande:write",'boisson:read:simple'])]
 
     private $statutCommande;
 
@@ -70,9 +70,9 @@ class Commande
 
     #[ORM\ManyToOne(targetEntity: Client::class, inversedBy: 'commandes')]
     #[Groups(["write",'boisson:read:simple'])]
-
+    
     private $client;
-
+    
     #[ORM\OneToMany(mappedBy: 'commande', targetEntity: Burger::class)]
     private $burgers;
 
