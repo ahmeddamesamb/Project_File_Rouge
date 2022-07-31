@@ -17,48 +17,48 @@ use Symfony\Component\Validator\Constraints\Cascade;
 
 #[ORM\Entity(repositoryClass: MenuRepository::class)]
 #[ApiResource(
-    collectionOperations:[
-        "get" =>[
-        "status" => Response::HTTP_OK,
-        "normalization_context" =>['groups' => ['menu:read:simple']]
-    ],
-    "post"=>[
-        "denormalization_context" =>['groups' => ['write']], 
-    ]
-],
-     itemOperations:[
-        "put"=>[
-            "security"=>"is_granted('ROLE_GESTIONAIRE')",
-            "security_message"=>"Access denied in this ressource"
-        ],
-        "get" =>[
-                "status" => Response::HTTP_OK,
-                "normalization_context" =>['groups' => ['menu:read:all']],
-        ]
-        ]
+    // collectionOperations:[
+//         "get" =>[
+//         "status" => Response::HTTP_OK,
+//         "normalization_context" =>['groups' => ['menu:read:simple']]
+//     ],
+//     "post"=>[
+//         "denormalization_context" =>['groups' => ['write']], 
+//     ]
+// ],
+//      itemOperations:[
+//         "put"=>[
+//             "security"=>"is_granted('ROLE_GESTIONAIRE')",
+//             "security_message"=>"Access denied in this ressource"
+//         ],
+//         "get" =>[
+//                 "status" => Response::HTTP_OK,
+//                 "normalization_context" =>['groups' => ['menu:read:all']],
+//         ]
+//         ]
     )]
 
 class Menu extends Produit
 {
-    #[Groups(['write','menu:read:simple','burger:read'])]
+    // #[Groups(['write','menu:read:simple','burger:read'])]
     protected $nom;
 
-    #[Groups(['write','menu:read:simple','burger:read'])]
+    // #[Groups(['write','menu:read:simple','burger:read'])]
     protected $image;
 
     #[ORM\OneToMany(mappedBy: 'menu', targetEntity: MenuBoisson::class,cascade:['persist'])]
-    #[Groups(['write','menu:read:simple','burger:read'])]
+    // #[Groups(['write','menu:read:simple','burger:read'])]
         #[SerializedName('Boissons')]
     
     private $menuBoissons;
 
     #[ORM\OneToMany(mappedBy: 'menu', targetEntity: MenuBurger::class,cascade:['persist'])]
-    #[Groups(['write','menu:read:simple','burger:read'])]
+    // #[Groups(['write','menu:read:simple','burger:read'])]
         #[SerializedName('Burgers')]
     private $menuBurgers;
 
     #[ORM\OneToMany(mappedBy: 'menu', targetEntity: MenuFrite::class,cascade:['persist'])]
-    #[Groups(['write','menu:read:simple','burger:read'])]
+    // #[Groups(['write','menu:read:simple','burger:read'])]
         #[SerializedName('Frites')]
     private $menuFrites;
 
