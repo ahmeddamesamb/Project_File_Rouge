@@ -19,6 +19,9 @@ DirectoryIndex index.php
 
 <IfModule mod_rewrite.c>
     RewriteEngine On
+    # Header set Access-Control-Allow-Origin 'http://localhost:4200'
+    # Header always set Access-Control-Allow-Methods "POST, GET, DELETE, PUT"
+    # Header always set Access-Control-Allow-Headers "*"
     SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1
     SetEnvIf Content-Type "(.*)" HTTP_CONTENT_TYPE=$1
     SetEnvIf Accept "(.*)" HTTP_ACCEPT=$1
