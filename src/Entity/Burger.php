@@ -14,33 +14,17 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\HasLifecycleCallbacks]
 
 #[ApiResource(
-    collectionOperations:[
-      "get" =>[
-          "status" => Response::HTTP_OK,
-          "normalization_context" =>['groups' => ['burger:read']]
-      ],
-          "post"=>[
-          "denormalization_context" =>['groups' => ['burger:write']],
-      ]
-    ],
-      itemOperations: [
-          "put"=>[
-              "security"=>"is_granted('ROLE_GESTIONAIRE')",
-              "security_message"=>"Access denied in this ressource"
-          ],
-          "get" =>[
-                  "status" => Response::HTTP_OK,
-                  "normalization_context" =>['groups' => ['burger:read']],
-          ]
-      ]
-  )]
+
+    )]
 class Burger extends Produit
 {
 
     #[ORM\ManyToOne(targetEntity: Commande::class, inversedBy: 'burgers')]
+    // #[Groups(['write','menu:read:simple','burger:read'])]
     private $commande;
 
     #[ORM\OneToMany(mappedBy: 'burger', targetEntity: MenuBurger::class)]
+    // #[Groups(['write','menu:read:simple','burger:read'])]
     private $menuBurgers;
 
 

@@ -40,25 +40,25 @@ use Symfony\Component\Validator\Constraints\Cascade;
 
 class Menu extends Produit
 {
-    #[Groups(['write','menu:read:simple'])]
+    #[Groups(['write','menu:read:simple','burger:read'])]
     protected $nom;
 
-    #[Groups(['write','menu:read:simple'])]
+    #[Groups(['write','menu:read:simple','burger:read'])]
     protected $image;
 
     #[ORM\OneToMany(mappedBy: 'menu', targetEntity: MenuBoisson::class,cascade:['persist'])]
-    #[Groups(['write','menu:read:simple'])]
+    #[Groups(['write','menu:read:simple','burger:read'])]
         #[SerializedName('Boissons')]
     
     private $menuBoissons;
 
     #[ORM\OneToMany(mappedBy: 'menu', targetEntity: MenuBurger::class,cascade:['persist'])]
-    #[Groups(['write','menu:read:simple'])]
+    #[Groups(['write','menu:read:simple','burger:read'])]
         #[SerializedName('Burgers')]
     private $menuBurgers;
 
     #[ORM\OneToMany(mappedBy: 'menu', targetEntity: MenuFrite::class,cascade:['persist'])]
-    #[Groups(['write','menu:read:simple'])]
+    #[Groups(['write','menu:read:simple','burger:read'])]
         #[SerializedName('Frites')]
     private $menuFrites;
 

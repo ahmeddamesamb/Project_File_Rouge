@@ -46,6 +46,7 @@ class Produit
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     #[Groups(["produit:write","burger:write"])]
+    
     protected $image;
 
     #[ORM\Column(type: 'string', length: 255)]
@@ -71,6 +72,10 @@ class Produit
     #[ORM\ManyToOne(targetEntity: Gestionaire::class, inversedBy: 'produits')]
     
     private $gestionaire;
+
+    #[ORM\Column(nullable: true,options:["default"=>1])]
+    #[Groups(["produit:write","burger:write"])]
+    private ?int $quantity = 1;
 
     public function __construct()
     {
@@ -180,6 +185,18 @@ class Produit
     public function setGestionaire(?Gestionaire $gestionaire): self
     {
         $this->gestionaire = $gestionaire;
+
+        return $this;
+    }
+
+    public function getQuantity(): ?int
+    {
+        return $this->quantity;
+    }
+
+    public function setQuantity(?int $quantity): self
+    {
+        $this->quantity = $quantity;
 
         return $this;
     }

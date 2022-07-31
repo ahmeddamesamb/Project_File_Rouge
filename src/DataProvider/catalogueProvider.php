@@ -33,7 +33,6 @@ class catalogueProvider implements ContextAwareCollectionDataProviderInterface,R
             array_push($produit,$burger);
         }
         
-        dd($produit);
         return $produit;
     }
 
