@@ -27,7 +27,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
           ],
           "get" =>[
                   "status" => Response::HTTP_OK,
-                  "normalization_context" =>['groups' => ['produit:read:all']],
+                  "normalization_context" =>['groups' => ['produit:read']],
           ]
       ]
   )]
@@ -41,25 +41,24 @@ class Produit
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    
+    #[Groups(["produit:write",'Boisson:write','Boisson:read','Frite:write','Frite:read','Burger:write','Burger:read','menu:read','MenuFrite:read','MenuBurger:read','MenuTaille:read'])]
     protected $id;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    #[Groups(["produit:write","burger:write"])]
-    
+    #[Groups(["produit:write",'commande:read','Boisson:write','Boisson:read','Frite:write','Frite:read','Burger:write','Burger:read','menu:read','menu:write','MenuFrite:read','MenuBurger:read','MenuTaille:read','TailleBoisson:write','TailleBoisson:read'])]
     protected $image;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(["produit:write","burger:write"])]
+    #[Groups(["produit:write",'Frite:write','Frite:read','Burger:write','Burger:read'])]
     protected $description = "Produitde premiere qualité";
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(["produit:write","burger:write"])]
+    #[Groups(["produit:write",'commande:read','Boisson:write','Boisson:read','Frite:write','Frite:read','menu:write','Burger:write','Burger:read','menu:read','MenuFrite:read','MenuBurger:read','MenuTaille:read','TailleBoisson:write','TailleBoisson:read'])]
     protected $nom;
-
+    
     #[ORM\Column(type: 'integer')]
-    #[Groups(["produit:write","burger:write"])]
-    protected $prix ;
+    #[Groups(["produit:write",'commande:read','Frite:write','Frite:read','Burger:write','Burger:read','menu:write','menu:read','MenuFrite:read','MenuBurger:read','MenuTaille:read','TailleBoisson:write','TailleBoisson:read'])]
+    protected ?int $prix=null ;
 
     #[ORM\Column(type: 'boolean')]
     protected $etatProduit=true;
@@ -73,9 +72,7 @@ class Produit
     
     private $gestionaire;
 
-    #[ORM\Column(nullable: true,options:["default"=>1])]
-    #[Groups(["produit:write","burger:write"])]
-    private ?int $quantity = 1;
+
 
     public function __construct()
     {
@@ -189,16 +186,6 @@ class Produit
         return $this;
     }
 
-    public function getQuantity(): ?int
-    {
-        return $this->quantity;
-    }
 
-    public function setQuantity(?int $quantity): self
-    {
-        $this->quantity = $quantity;
-
-        return $this;
-    }
 
 }

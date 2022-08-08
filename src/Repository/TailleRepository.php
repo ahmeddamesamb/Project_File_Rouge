@@ -2,26 +2,26 @@
 
 namespace App\Repository;
 
-use App\Entity\TailleBoisson;
+use App\Entity\Taille;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<TailleBoisson>
+ * @extends ServiceEntityRepository<Taille>
  *
- * @method TailleBoisson|null find($id, $lockMode = null, $lockVersion = null)
- * @method TailleBoisson|null findOneBy(array $criteria, array $orderBy = null)
- * @method TailleBoisson[]    findAll()
- * @method TailleBoisson[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Taille|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Taille|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Taille[]    findAll()
+ * @method Taille[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class TailleBoissonRepository extends ServiceEntityRepository
+class TailleRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, TailleBoisson::class);
+        parent::__construct($registry, Taille::class);
     }
 
-    public function add(TailleBoisson $entity, bool $flush = false): void
+    public function add(Taille $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
 
@@ -30,7 +30,7 @@ class TailleBoissonRepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(TailleBoisson $entity, bool $flush = false): void
+    public function remove(Taille $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
 
@@ -40,7 +40,7 @@ class TailleBoissonRepository extends ServiceEntityRepository
     }
 
 //    /**
-//     * @return TailleBoisson[] Returns an array of TailleBoisson objects
+//     * @return Taille[] Returns an array of Taille objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -54,7 +54,7 @@ class TailleBoissonRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?TailleBoisson
+//    public function findOneBySomeField($value): ?Taille
 //    {
 //        return $this->createQueryBuilder('t')
 //            ->andWhere('t.exampleField = :val')

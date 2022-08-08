@@ -9,7 +9,26 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: LigneCommandeRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    collectionOperations:[
+        "get" =>[
+        "status" => Response::HTTP_OK,
+        "normalization_context" =>['groups' => ['lignecommande:read']]
+    ],
+    "post"=>[
+        "denormalization_context" =>['groups' => ['lignecommande:write']], 
+    ]],
+     itemOperations:[
+        "put"=>[
+            "security"=>"is_granted('ROLE_CLIENT')",
+            "security_message"=>"Access denied in this ressource"
+        ],
+        "get" =>[
+                "status" => Response::HTTP_OK,
+                "normalization_context" =>['groups' => ['lignecommande:read']],
+        ]
+        ]
+    )]
 
  
 class LigneCommande
@@ -18,17 +37,18 @@ class LigneCommande
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['lignecommande:read'])]
     private $id;
 
     #[ORM\Column(type: 'integer')]
-    #[Groups(["write",'boisson:read:simple'])]
+    #[Groups(['boisson:read:simple','commande:read','commande:write','lignecommande:read'])]
     private $quantite;
 
     #[ORM\ManyToOne(targetEntity: Commande::class, inversedBy: 'ligneCommandes')]
     private $commande;
 
     #[ORM\ManyToOne(targetEntity: Produit::class, inversedBy: 'ligneCommandes')]
-    #[Groups(["write",'boisson:read:simple'])]
+    #[Groups(['commande:write','commande:read','boisson:read:simple','lignecommande:read'])]
     private $produit;
 
     #[ORM\Column(type: 'integer')]

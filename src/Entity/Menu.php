@@ -17,88 +17,52 @@ use Symfony\Component\Validator\Constraints\Cascade;
 
 #[ORM\Entity(repositoryClass: MenuRepository::class)]
 #[ApiResource(
-    // collectionOperations:[
-//         "get" =>[
-//         "status" => Response::HTTP_OK,
-//         "normalization_context" =>['groups' => ['menu:read:simple']]
-//     ],
-//     "post"=>[
-//         "denormalization_context" =>['groups' => ['write']], 
-//     ]
-// ],
-//      itemOperations:[
-//         "put"=>[
-//             "security"=>"is_granted('ROLE_GESTIONAIRE')",
-//             "security_message"=>"Access denied in this ressource"
-//         ],
-//         "get" =>[
-//                 "status" => Response::HTTP_OK,
-//                 "normalization_context" =>['groups' => ['menu:read:all']],
-//         ]
-//         ]
+    collectionOperations:[
+        "get" =>[
+        "status" => Response::HTTP_OK,
+        "normalization_context" =>['groups' => ['menu:read']]
+    ],
+    "post"=>[
+        "denormalization_context" =>['groups' => ['menu:write']], 
+    ]
+],
+     itemOperations:[
+        "put"=>[
+            "security"=>"is_granted('ROLE_GESTIONAIRE')",
+            "security_message"=>"Access denied in this ressource"
+        ],
+        "get" =>[
+                "status" => Response::HTTP_OK,
+                "normalization_context" =>['groups' => ['menu:read']],
+        ]
+        ]
     )]
 
 class Menu extends Produit
 {
-    // #[Groups(['write','menu:read:simple','burger:read'])]
-    protected $nom;
-
-    // #[Groups(['write','menu:read:simple','burger:read'])]
-    protected $image;
-
-    #[ORM\OneToMany(mappedBy: 'menu', targetEntity: MenuBoisson::class,cascade:['persist'])]
-    // #[Groups(['write','menu:read:simple','burger:read'])]
-        #[SerializedName('Boissons')]
-    
-    private $menuBoissons;
-
+  
     #[ORM\OneToMany(mappedBy: 'menu', targetEntity: MenuBurger::class,cascade:['persist'])]
-    // #[Groups(['write','menu:read:simple','burger:read'])]
+    #[Groups(['menu:write','menu:read','Burger:read'])]
         #[SerializedName('Burgers')]
     private $menuBurgers;
 
     #[ORM\OneToMany(mappedBy: 'menu', targetEntity: MenuFrite::class,cascade:['persist'])]
-    // #[Groups(['write','menu:read:simple','burger:read'])]
-        #[SerializedName('Frites')]
+    #[Groups(['menu:write','menu:read','Burger:read'])]
+    #[SerializedName('Frites')]
     private $menuFrites;
+    
+    #[ORM\OneToMany(mappedBy: 'menu', targetEntity: MenuTaille::class,cascade:['persist'])]
+    #[Groups(['menu:write','menu:read','Burger:read'])]
+    private Collection $menutailles;
 
     public function __construct()
     {
         parent::__construct();
-        $this->menuBoissons = new ArrayCollection();
         $this->menuBurgers = new ArrayCollection();
         $this->menuFrites = new ArrayCollection();
+        $this->menutailles = new ArrayCollection();
     }
 
-    /**
-     * @return Collection<int, MenuBoisson>
-     */
-    public function getMenuBoissons(): Collection
-    {
-        return $this->menuBoissons;
-    }
-
-    public function addMenuBoisson(MenuBoisson $menuBoisson): self
-    {
-        if (!$this->menuBoissons->contains($menuBoisson)) {
-            $this->menuBoissons[] = $menuBoisson;
-            $menuBoisson->setMenu($this);
-        }
-
-        return $this;
-    }
-
-    public function removeMenuBoisson(MenuBoisson $menuBoisson): self
-    {
-        if ($this->menuBoissons->removeElement($menuBoisson)) {
-            // set the owning side to null (unless already changed)
-            if ($menuBoisson->getMenu() === $this) {
-                $menuBoisson->setMenu(null);
-            }
-        }
-
-        return $this;
-    }
 
     /**
      * @return Collection<int, MenuBurger>
@@ -176,12 +140,35 @@ class Menu extends Produit
         $this->addMenuFrite($Mfrit);
     }
     //**METHODE PERMETTANT D AJOUTER UN BOISSON**
-    public function addBoisson(Boisson $boisson,int $qt=1){
-        $Mboisson= new MenuBoisson();
-        $Mboisson->setBoisson($boisson);
-        $Mboisson->setQuantiteBoisson($qt);
-        $Mboisson->setMenu($this);
-        $this->addMenuBoisson($Mboisson);
+
+    /**
+     * @return Collection<int, MenuTaille>
+     */
+    public function getMenutailles(): Collection
+    {
+        return $this->menutailles;
     }
-   
+
+    public function addMenutaille(MenuTaille $menutaille): self
+    {
+        if (!$this->menutailles->contains($menutaille)) {
+            $this->menutailles->add($menutaille);
+            $menutaille->setMenu($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMenutaille(MenuTaille $menutaille): self
+    {
+        if ($this->menutailles->removeElement($menutaille)) {
+            // set the owning side to null (unless already changed)
+            if ($menutaille->getMenu() === $this) {
+                $menutaille->setMenu(null);
+            }
+        }
+
+        return $this;
+    }
+
 }

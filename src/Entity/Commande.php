@@ -16,43 +16,46 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
     collectionOperations:[
         "get" =>[
         "status" => Response::HTTP_OK,
-        "normalization_context" =>['groups' => ['boisson:read:simple']]
+        "normalization_context" =>['groups' => ['commande:read']]
     ],
     "post"=>[
         "denormalization_context" =>['groups' => ['commande:write']], 
     ]],
-     itemOperations:[
+    itemOperations: [
         "put"=>[
             "security"=>"is_granted('ROLE_CLIENT')",
             "security_message"=>"Access denied in this ressource"
         ],
         "get" =>[
                 "status" => Response::HTTP_OK,
-                "normalization_context" =>['groups' => ['boisson:read:all']],
+                "normalization_context" =>['groups' => ['commande:read']],
         ]
-        ]
+    ]
     )]
 class Commande
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['commande:write','commande:read','boisson:read:simple','lignecommande:read'])] 
     private $id;
 
     #[ORM\Column(type: 'boolean')]
+    #[Groups(['boisson:read:simple','commande:read'])]
     private $etatCommande=1;
 
     #[ORM\Column(type: 'string',nullable:true)]
     private $numeroCommande;
 
     #[ORM\Column(type: 'datetime')]
+    #[Groups(['boisson:read:simple','commande:read'])]
     private $dateCommande;
-
+    
     #[ORM\Column(type: 'boolean')]
     private $etatPaiement=1;
 
     #[ORM\Column(type: 'string',nullable:true)]
-    #[Groups(["commande:write",'boisson:read:simple'])]
+    #[Groups(['boisson:read:simple'])]
 
     private $statutCommande;
 
@@ -69,15 +72,14 @@ class Commande
     private $livraison;
 
     #[ORM\ManyToOne(targetEntity: Client::class, inversedBy: 'commandes')]
-    #[Groups(["write",'boisson:read:simple'])]
-    
+    #[Groups(['commande:write','commande:read','boisson:read:simple'])] 
     private $client;
     
     #[ORM\OneToMany(mappedBy: 'commande', targetEntity: Burger::class)]
     private $burgers;
 
     #[ORM\OneToMany(mappedBy: 'commande',cascade:['persist'], targetEntity: LigneCommande::class)]
-    #[Groups(["write",'boisson:read:simple'])]
+    #[Groups(['boisson:read:simple','commande:write','commande:read'])]
     #[SerializedName('Produits')]
     private $ligneCommandes;
 

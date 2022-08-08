@@ -55,7 +55,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
     protected $id;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
-    #[Groups(["write",'user:read:simple'])] 
+    #[Groups(["write",'user:read:simple','commande:read'])] 
     protected $email;  
     
     #[ORM\Column(type: 'string')] 
@@ -63,14 +63,14 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
     protected $password;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(["write",'user:read:simple'])] 
+    #[Groups(["write",'user:read:simple','commande:read'])] 
     protected $prenom;
 
     #[ORM\Column(type: 'string', length: 255)]  
-    #[Groups(["write",'user:read:simple'])] 
+    #[Groups(["write",'user:read:simple','commande:read'])] 
        protected $nom;
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(["write",'user:read:simple'])] 
+    #[Groups(["write",'user:read:simple','commande:read'])] 
     protected $telephone;
 
     #[ORM\Column(type: 'smallint',options:["default"=>1])]

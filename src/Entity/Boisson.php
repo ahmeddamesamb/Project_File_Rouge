@@ -11,63 +11,71 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: BoissonRepository::class)]
-#[ApiResource()]
+#[ApiResource(
+    collectionOperations:[
+        "get" =>[
+            "status" => Response::HTTP_OK,
+            "normalization_context" =>['groups' => ['Boisson:read']]
+        ],
+            "post"=>[
+            "denormalization_context" =>['groups' => ['Boisson:write']],
+        ]
+      ],
+        itemOperations: [
+            "put"=>[
+                "security"=>"is_granted('ROLE_GESTIONAIRE')",
+                "security_message"=>"Access denied in this ressource"
+            ],
+            "get" =>[
+                    "status" => Response::HTTP_OK,
+                    "normalization_context" =>['groups' => ['Boisson:read']],
+            ]
+        ]
+)]
 class Boisson extends Produit
 {
 
-    #[ORM\ManyToOne(targetEntity: TailleBoisson::class, inversedBy: 'boissons')]
-    
-    private $tailleBoissons;
 
-    #[ORM\OneToMany(mappedBy: 'boisson', targetEntity: MenuBoisson::class)]
-    private $menuBoissons;
+    #[ORM\OneToMany(mappedBy: 'boisson', targetEntity: Tailleboisson::class,cascade:['persist'])]
+    private Collection $tailleBoissons;
 
     public function __construct()
     {
         parent::__construct();
-        $this->menuBoissons = new ArrayCollection();
+        $this->tailleBoissons = new ArrayCollection();
     }
 
-    public function getTailleBoissons(): ?TailleBoisson
+    /**
+     * @return Collection<int, Tailleboisson>
+     */
+    public function getTailleBoissons(): Collection
     {
         return $this->tailleBoissons;
     }
 
-    public function setTailleBoissons(?TailleBoisson $tailleBoissons): self
+    public function addTailleBoisson(Tailleboisson $tailleBoisson): self
     {
-        $this->tailleBoissons = $tailleBoissons;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, MenuBoisson>
-     */
-    public function getMenuBoissons(): Collection
-    {
-        return $this->menuBoissons;
-    }
-
-    public function addMenuBoisson(MenuBoisson $menuBoisson): self
-    {
-        if (!$this->menuBoissons->contains($menuBoisson)) {
-            $this->menuBoissons[] = $menuBoisson;
-            $menuBoisson->setBoisson($this);
+        if (!$this->tailleBoissons->contains($tailleBoisson)) {
+            $this->tailleBoissons->add($tailleBoisson);
+            $tailleBoisson->setBoisson($this);
         }
 
         return $this;
     }
 
-    public function removeMenuBoisson(MenuBoisson $menuBoisson): self
+    public function removeTailleBoisson(Tailleboisson $tailleBoisson): self
     {
-        if ($this->menuBoissons->removeElement($menuBoisson)) {
+        if ($this->tailleBoissons->removeElement($tailleBoisson)) {
             // set the owning side to null (unless already changed)
-            if ($menuBoisson->getBoisson() === $this) {
-                $menuBoisson->setBoisson(null);
+            if ($tailleBoisson->getBoisson() === $this) {
+                $tailleBoisson->setBoisson(null);
             }
         }
 
         return $this;
     }
+
+
+
 
 }
