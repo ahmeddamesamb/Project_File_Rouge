@@ -1,11 +1,11 @@
 <?php
 
 namespace App\Entity;
-
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ZoneRepository;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -15,10 +15,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
     collectionOperations:[
         "get" =>[
         "status" => Response::HTTP_OK,
-        "normalization_context" =>['groups' => ['zone:read:simple']]
+        "normalization_context" =>['groups' => ['zone:read']]
     ],
     "post"=>[
-        "denormalization_context" =>['groups' => ['write']], 
+        "denormalization_context" =>['groups' => ['zone:write']], 
     
     ]],
      itemOperations:[
@@ -28,7 +28,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
         ],
         "get" =>[
                 "status" => Response::HTTP_OK,
-                "normalization_context" =>['groups' => ['zone:read:all']],
+                "normalization_context" =>['groups' => ['zone:read']],
         ]
         ]
     )]
@@ -37,26 +37,31 @@ class Zone
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['zone:write','zone:read','commande:read'])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(["write",'zone:read:simple'])]
+    #[Groups(['zone:write','zone:read','commande:read'])]
     private $nomZone;
 
     #[ORM\Column(type: 'integer')]
-    #[Groups(["write",'zone:read:simple'])]
+    #[Groups(['zone:write','zone:read','commande:read'])]
     private $coutLivraison;
 
-    #[ORM\Column(type: 'boolean')]
-    private $etatZone=1;
+    #[ORM\Column(type: 'string')]
+    #[Groups(['zone:write','zone:read','commande:read'])]
+    private $etatZone;
 
     #[ORM\OneToMany(mappedBy: 'zone', targetEntity: Livraison::class)]
-    #[Groups(["write",'zone:read:simple'])]
     private $livraisons;
 
-    #[ORM\OneToMany(mappedBy: 'zone', targetEntity: Quartier::class)]
-    #[Groups(["write",'zone:read:simple'])]
-    private $quartiers;
+    #[ORM\OneToMany(mappedBy: 'zone', targetEntity: Commande::class)]
+    #[Groups(['zone:write','zone:read','commande:read'])]
+    #[ApiSubresource()]
+    private Collection $commandes;
+
+    #[ORM\ManyToOne(inversedBy: 'zone')]
+    private ?Gestionaire $gestionaire = null;
 
 
 
@@ -64,6 +69,7 @@ class Zone
     {
         $this->livraisons = new ArrayCollection();
         $this->quartiers = new ArrayCollection();
+        $this->commandes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -95,12 +101,12 @@ class Zone
         return $this;
     }
 
-    public function isEtatZone(): ?bool
+    public function isEtatZone(): ?string
     {
         return $this->etatZone;
     }
 
-    public function setEtatZone(bool $etatZone): self
+    public function setEtatZone(string $etatZone): self
     {
         $this->etatZone = $etatZone;
 
@@ -137,32 +143,45 @@ class Zone
         return $this;
     }
 
+ 
     /**
-     * @return Collection<int, Quartier>
+     * @return Collection<int, Commande>
      */
-    public function getQuartiers(): Collection
+    public function getCommandes(): Collection
     {
-        return $this->quartiers;
+        return $this->commandes;
     }
 
-    public function addQuartier(Quartier $quartier): self
+    public function addCommande(Commande $commande): self
     {
-        if (!$this->quartiers->contains($quartier)) {
-            $this->quartiers[] = $quartier;
-            $quartier->setZone($this);
+        if (!$this->commandes->contains($commande)) {
+            $this->commandes->add($commande);
+            $commande->setZone($this);
         }
 
         return $this;
     }
 
-    public function removeQuartier(Quartier $quartier): self
+    public function removeCommande(Commande $commande): self
     {
-        if ($this->quartiers->removeElement($quartier)) {
+        if ($this->commandes->removeElement($commande)) {
             // set the owning side to null (unless already changed)
-            if ($quartier->getZone() === $this) {
-                $quartier->setZone(null);
+            if ($commande->getZone() === $this) {
+                $commande->setZone(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getGestionaire(): ?Gestionaire
+    {
+        return $this->gestionaire;
+    }
+
+    public function setGestionaire(?Gestionaire $gestionaire): self
+    {
+        $this->gestionaire = $gestionaire;
 
         return $this;
     }

@@ -40,12 +40,14 @@ private ServicePrix $service;
      */
     public function persist($data, array $context = [])
     {
-       
+        //    dd($data);
             $data->setPaiement(($this->service->CommandePrix($data)));
             // $data->setClient($this->token->getUser());
-            $data->setClient($this->clientrepo->find(2));
+
             $this->entityManager->persist($data);
             $this->entityManager->flush();
+
+
         }
 
     

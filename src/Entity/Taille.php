@@ -37,7 +37,7 @@ class Taille
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['taille:write','taille:read','Menutaille:read','TailleBoisson:write','TailleBoisson:read','menu:read'])]
+    #[Groups(['taille:write','taille:read','Menutaille:read','TailleBoisson:write','TailleBoisson:read','menu:read','menu:write'])]
     private ?int $id = null;
 
     #[ORM\Column]
@@ -55,7 +55,7 @@ class Taille
     private Collection $menuTailles;
     
     #[ORM\OneToMany(mappedBy: 'taille', targetEntity: Tailleboisson::class,cascade:['persist'])]
-    #[Groups(['menu:read'])]
+    #[Groups(['menu:read','taille:write','taille:read'])]
     private Collection $tailleBoissons;
 
     public function __construct()

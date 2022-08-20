@@ -34,8 +34,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
 )]
 class Boisson extends Produit
 {
-
-
     #[ORM\OneToMany(mappedBy: 'boisson', targetEntity: Tailleboisson::class,cascade:['persist'])]
     private Collection $tailleBoissons;
 

@@ -41,27 +41,28 @@ class Produit
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(["produit:write",'Boisson:write','Boisson:read','Frite:write','Frite:read','Burger:write','Burger:read','menu:read','MenuFrite:read','MenuBurger:read','MenuTaille:read'])]
+    #[Groups(["produit:write",'produit:read','Boisson:write','Boisson:read','Frite:write','Frite:read','zone:write','zone:read','Burger:write','Burger:read','menu:read','MenuFrite:read','MenuBurger:read','MenuTaille:read'])]
     protected $id;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    #[Groups(["produit:write",'commande:read','Boisson:write','Boisson:read','Frite:write','Frite:read','Burger:write','Burger:read','menu:read','menu:write','MenuFrite:read','MenuBurger:read','MenuTaille:read','TailleBoisson:write','TailleBoisson:read'])]
+    #[Groups(["produit:write",'produit:read','commande:read','Menutaille:write','Menutaille:read','catalogue','Boisson:write','Boisson:read','Frite:write','Frite:read','Burger:write','Burger:read','menu:read','menu:write','MenuFrite:read','MenuBurger:read','MenuTaille:read','TailleBoisson:write','TailleBoisson:read'])]
     protected $image;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(["produit:write",'Frite:write','Frite:read','Burger:write','Burger:read'])]
+    #[Groups(["produit:write",'produit:read','Boisson:write','Boisson:read','Frite:write','catalogue','Frite:read','Burger:write','Burger:read'])]
     protected $description = "Produitde premiere qualité";
 
-    #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(["produit:write",'commande:read','Boisson:write','Boisson:read','Frite:write','Frite:read','menu:write','Burger:write','Burger:read','menu:read','MenuFrite:read','MenuBurger:read','MenuTaille:read','TailleBoisson:write','TailleBoisson:read'])]
+    #[ORM\Column(type: 'string', length: 255,nullable:true)]
+    #[Groups(["produit:write",'produit:read','commande:read','Menutaille:write','Menutaille:read','catalogue','zone:write','zone:read','Boisson:read','Frite:write','Frite:read','menu:write','Burger:write','Burger:read','menu:read','MenuFrite:read','MenuBurger:read','MenuTaille:read','TailleBoisson:write','TailleBoisson:read'])]
     protected $nom;
     
-    #[ORM\Column(type: 'integer')]
-    #[Groups(["produit:write",'commande:read','Frite:write','Frite:read','Burger:write','Burger:read','menu:write','menu:read','MenuFrite:read','MenuBurger:read','MenuTaille:read','TailleBoisson:write','TailleBoisson:read'])]
-    protected ?int $prix=null ;
-
-    #[ORM\Column(type: 'boolean')]
-    protected $etatProduit=true;
+    #[ORM\Column(type: 'integer',nullable:true)]
+    #[Groups(["produit:write",'produit:read','commande:read','catalogue','Frite:write','Frite:read','Burger:write','Burger:read','menu:write','menu:read','MenuFrite:read','MenuBurger:read','MenuTaille:read','TailleBoisson:write','TailleBoisson:read'])]
+    protected ?int $prix ;
+    
+    #[ORM\Column(type: 'string')]
+    #[Groups(["produit:write",'produit:read','commande:read','Menutaille:write','Menutaille:read','catalogue','Boisson:write','Boisson:read','Frite:write','Frite:read','Burger:write','Burger:read','menu:write','menu:read','MenuFrite:read','MenuBurger:read','MenuTaille:read','TailleBoisson:write','TailleBoisson:read'])]
+    protected $etatProduit;
 
 
     #[ORM\OneToMany(mappedBy: 'produit', targetEntity: LigneCommande::class)]
@@ -69,7 +70,7 @@ class Produit
     private $ligneCommandes;
 
     #[ORM\ManyToOne(targetEntity: Gestionaire::class, inversedBy: 'produits')]
-    
+    #[Groups(["produit:write",'commande:read','catalogue','Boisson:write','Boisson:read','Frite:write','Frite:read','Burger:write','Burger:read','menu:write','menu:read','MenuFrite:read','MenuBurger:read','MenuTaille:read','TailleBoisson:write','TailleBoisson:read'])]
     private $gestionaire;
 
 
@@ -132,12 +133,12 @@ class Produit
         return $this;
     }
 
-    public function isEtatProduit(): ?bool
+    public function isEtatProduit(): ?string
     {
         return $this->etatProduit;
     }
 
-    public function setEtatProduit(bool $etatProduit): self
+    public function setEtatProduit(string $etatProduit): self
     {
         $this->etatProduit = $etatProduit;
 

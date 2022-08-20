@@ -37,22 +37,22 @@ class LigneCommande
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['lignecommande:read'])]
+    #[Groups(['boisson:read:simple','commande:read','commande:write','lignecommande:read'])]
     private $id;
 
     #[ORM\Column(type: 'integer')]
-    #[Groups(['boisson:read:simple','commande:read','commande:write','lignecommande:read'])]
+    #[Groups(['boisson:read:simple','commande:read','commande:write','lignecommande:read','zone:write','zone:read'])]
     private $quantite;
 
     #[ORM\ManyToOne(targetEntity: Commande::class, inversedBy: 'ligneCommandes')]
     private $commande;
 
     #[ORM\ManyToOne(targetEntity: Produit::class, inversedBy: 'ligneCommandes')]
-    #[Groups(['commande:write','commande:read','boisson:read:simple','lignecommande:read'])]
+    #[Groups(['commande:write','commande:read','boisson:read','lignecommande:read','zone:write','zone:read'])]
     private $produit;
 
-    #[ORM\Column(type: 'integer')]
-    private $prix=0;
+    #[ORM\Column(type: 'integer',nullable:true)]
+    private $prix;
     
     public function getId(): ?int
     {

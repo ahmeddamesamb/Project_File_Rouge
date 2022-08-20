@@ -7,23 +7,47 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ClientRepository;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\HttpFoundation\Response;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-#[ApiResource()]
+#[ApiResource(
+    collectionOperations:[
+        "get" =>[
+            "status" => Response::HTTP_OK,
+            "normalization_context" =>['groups' => ['client:read']]
+        ],
+            "post"=>[
+            "denormalization_context" =>['groups' => ['client:write']],
+        ]
+      ],
+        itemOperations: [
+            "put"=>[
+                "security"=>"is_granted('ROLE_GESTIONAIRE')",
+                "security_message"=>"Access denied in this ressource"
+            ],
+            "get" =>[
+                    "status" => Response::HTTP_OK,
+                    "normalization_context" =>['groups' => ['client:read']],
+            ]
+        ]
+)]
 #[ORM\Entity(repositoryClass: ClientRepository::class)]
+
 class Client  extends User
 {
    
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['commande:read'])] 
+    #[Groups(['commande:read','zone:read','client:read','client:write'])] 
     private $adresse;
-
+    
     #[ORM\ManyToOne(targetEntity: Gestionaire::class, inversedBy: 'clients')]
     private $gestionaire;
 
     #[ORM\OneToMany(mappedBy: 'client', targetEntity: Commande::class)]
-    // #[Groups(['commande:read'])] 
+    #[Groups(['zone:read','client:read'])] 
+    #[ApiSubresource()]
     private $commandes;
 
 

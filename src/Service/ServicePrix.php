@@ -8,7 +8,7 @@ class ServicePrix{
     /**
      * @param Menu $menu
      */
-    public function calculeprix($menu) {
+    public function Menuprix($menu) {
         $prix=0;
 
         foreach ($menu->getMenuBurgers() as $menuBurgers){
@@ -17,7 +17,10 @@ class ServicePrix{
         foreach ($menu->getMenuFrites() as $menuFrites){
             $prix+=$menuFrites->getFrite()->getPrix()*$menuFrites->getQuantiteFrite();
         }
- 
+        foreach ($menu->getMenutailles() as $menuTaille){
+            $prix+=$menuTaille->getTaille()->getPrix()*$menuTaille->getQuantity();
+        }
+        
         return $prix;
     }
 
@@ -33,6 +36,10 @@ class ServicePrix{
 
                 foreach ($commande->getLigneCommandes() as $menuBurgers){
                     $this->prix=$menuBurgers->getProduit()->getPrix()*($menuBurgers->getQuantite());
+                    
+                }
+                foreach ($commande->getLigneCommandes() as $menuTaille){
+                    $this->prix=$menuTaille->getProduit()->getPrix()*($menuTaille->getQuantite());
                     
                 }
                 return $this->prix;

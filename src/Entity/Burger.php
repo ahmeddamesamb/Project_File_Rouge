@@ -40,7 +40,8 @@ class Burger extends Produit
     #[ORM\ManyToOne(targetEntity: Commande::class, inversedBy: 'burgers')]
     private $commande;
 
-    #[ORM\OneToMany(mappedBy: 'burger', targetEntity: MenuBurger::class)]
+    #[ORM\OneToMany(mappedBy: 'burger', targetEntity: MenuBurger::class,cascade:['persist'])]
+    #[Groups(['catalogue'])]
     private $menuBurgers;
 
 

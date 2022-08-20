@@ -42,6 +42,7 @@ class MenuTaille
     private ?int $quantity = null;
     
     #[ORM\ManyToOne(inversedBy: 'menutailles')]
+    #[Groups(['Menutaille:write','Menutaille:read'])]
     private ?Menu $menu = null;
     
     #[ORM\ManyToOne(inversedBy: 'menuTailles')]

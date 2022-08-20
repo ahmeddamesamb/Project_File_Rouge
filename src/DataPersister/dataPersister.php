@@ -38,16 +38,16 @@ class dataPersister implements ContextAwareDataPersisterInterface
      */
     public function persist($data, array $context = [])
     {
-       
+        // dd($data);
         if ($data->getPlainPassword()) {
             $password = $this->encoder->hashPassword($data,$data->getPlainPassword());
             $data->setPassword($password);
             $data->eraseCredentials();    
-            $this->dataMail->envoiMail($data);
             $this->entityManager->persist($data);
             $this->entityManager->flush();
             $this->dataMail->envoiMail($data);
         }
+        dd('imposible bjfkq');
     }
 
     /**

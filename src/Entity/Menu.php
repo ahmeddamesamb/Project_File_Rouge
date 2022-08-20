@@ -6,14 +6,10 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\MenuRepository;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
-use App\Controller\MenuAddController;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\Common\Collections\ArrayCollection;
-use PhpParser\Node\Expr\Cast;
 use Symfony\Component\Serializer\Annotation\Groups;
-use Symfony\Component\Validator\Constraints\GreaterThan;
 use Symfony\Component\Serializer\Annotation\SerializedName;
-use Symfony\Component\Validator\Constraints\Cascade;
 
 #[ORM\Entity(repositoryClass: MenuRepository::class)]
 #[ApiResource(
@@ -42,12 +38,12 @@ class Menu extends Produit
 {
   
     #[ORM\OneToMany(mappedBy: 'menu', targetEntity: MenuBurger::class,cascade:['persist'])]
-    #[Groups(['menu:write','menu:read','Burger:read'])]
+    #[Groups(['menu:write','menu:read','Burger:read','Menutaille:write','Menutaille:read'])]
         #[SerializedName('Burgers')]
     private $menuBurgers;
 
     #[ORM\OneToMany(mappedBy: 'menu', targetEntity: MenuFrite::class,cascade:['persist'])]
-    #[Groups(['menu:write','menu:read','Burger:read'])]
+    #[Groups(['menu:write','menu:read','Burger:read','Menutaille:write','Menutaille:read'])]
     #[SerializedName('Frites')]
     private $menuFrites;
     

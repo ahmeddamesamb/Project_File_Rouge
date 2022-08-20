@@ -1,12 +1,12 @@
 <?php
 
 namespace App\Entity;
-
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\CommandeRepository;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\HttpFoundation\Response;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\SerializedName;
@@ -23,8 +23,8 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
     ]],
     itemOperations: [
         "put"=>[
-            "security"=>"is_granted('ROLE_CLIENT')",
-            "security_message"=>"Access denied in this ressource"
+            // "security"=>"is_granted('ROLE_CLIENT')",
+            // "security_message"=>"Access denied in this ressource"
         ],
         "get" =>[
                 "status" => Response::HTTP_OK,
@@ -37,26 +37,27 @@ class Commande
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['commande:write','commande:read','boisson:read:simple','lignecommande:read'])] 
+    #[Groups(['commande:write','commande:read','boisson:read:simple','lignecommande:read','livraison:read','livraison:write','zone:write','zone:read','client:read'])] 
     private $id;
-
-    #[ORM\Column(type: 'boolean')]
-    #[Groups(['boisson:read:simple','commande:read'])]
-    private $etatCommande=1;
-
+    
+    #[ORM\Column(type: 'string',length:50)]
+    #[Groups(['boisson:read:simple','commande:read','commande:write','livraison:read','livraison:write','client:read','livreur:read','livreur:write'])]
+    private $etatCommande='en cours';
+    
     #[ORM\Column(type: 'string',nullable:true)]
+    #[Groups(['commande:read','boisson:read:simple','lignecommande:read','zone:write','zone:read','livraison:read','livraison:write','client:read','livreur:read','livreur:write'])] 
     private $numeroCommande;
 
     #[ORM\Column(type: 'datetime')]
-    #[Groups(['boisson:read:simple','commande:read'])]
+    #[Groups(['boisson:read:simple','commande:read','commande:write','livraison:read','livraison:write','client:read','livreur:read','livreur:write','zone:read'])]
     private $dateCommande;
     
-    #[ORM\Column(type: 'boolean')]
-    private $etatPaiement=1;
+    #[ORM\Column(type: 'string')]
+    #[Groups(['boisson:read:simple','commande:read','commande:write','client:read','livreur:read','livreur:write'])]
+    private $etatPaiement;
 
     #[ORM\Column(type: 'string',nullable:true)]
-    #[Groups(['boisson:read:simple'])]
-
+    #[Groups(['boisson:read:simple','zone:write','zone:read','client:read','livreur:read','livreur:write'])]
     private $statutCommande;
 
     #[ORM\Column(type: 'integer',nullable:true)]
@@ -69,19 +70,27 @@ class Commande
     private $gestionaire;
 
     #[ORM\ManyToOne(targetEntity: Livraison::class, inversedBy: 'commandes')]
+    // #[Groups(['boisson:read:simple','commande:read','commande:write','client:read'])]
     private $livraison;
 
     #[ORM\ManyToOne(targetEntity: Client::class, inversedBy: 'commandes')]
-    #[Groups(['commande:write','commande:read','boisson:read:simple'])] 
+    // #[ApiSubresource()]
+    #[Groups(['commande:write','commande:read','boisson:read:simple','zone:write','zone:read'])] 
     private $client;
     
     #[ORM\OneToMany(mappedBy: 'commande', targetEntity: Burger::class)]
     private $burgers;
 
     #[ORM\OneToMany(mappedBy: 'commande',cascade:['persist'], targetEntity: LigneCommande::class)]
-    #[Groups(['boisson:read:simple','commande:write','commande:read'])]
+    #[Groups(['boisson:read:simple','commande:write','commande:read','zone:read'])]
     #[SerializedName('Produits')]
     private $ligneCommandes;
+
+   
+    #[ORM\ManyToOne(inversedBy: 'commandes')]
+    #[Groups(['commande:read','commande:write'])]
+    private ?Zone $zone = null;
+
 
     public function __construct()
     {
@@ -96,12 +105,12 @@ class Commande
         return $this->id;
     }
 
-    public function isEtatCommande(): ?bool
+    public function isEtatCommande(): ?string
     {
         return $this->etatCommande;
     }
 
-    public function setEtatCommande(bool $etatCommande): self
+    public function setEtatCommande(string $etatCommande): self
     {
         $this->etatCommande = $etatCommande;
 
@@ -132,12 +141,12 @@ class Commande
         return $this;
     }
 
-    public function isEtatPaiement(): ?bool
+    public function isEtatPaiement(): ?string
     {
         return $this->etatPaiement;
     }
 
-    public function setEtatPaiement(bool $etatPaiement): self
+    public function setEtatPaiement(string $etatPaiement): self
     {
         $this->etatPaiement = $etatPaiement;
 
@@ -276,5 +285,18 @@ class Commande
 
         return $this;
     }
+
+    public function getZone(): ?Zone
+    {
+        return $this->zone;
+    }
+
+    public function setZone(?Zone $zone): self
+    {
+        $this->zone = $zone;
+
+        return $this;
+    }
+
 
 }

@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Entity;
-
 use Datetime;
 use Doctrine\ORM\Mapping as ORM;
 use App\Controller\MailController;
@@ -52,37 +51,41 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['livreur:read','client:read','livraison:read','livraison:write','zone:write','zone:read','client:write','client:read',])]
     protected $id;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
-    #[Groups(["write",'user:read:simple','commande:read'])] 
+    #[Groups(["write",'user:read:simple','commande:read','livreur:write','client:write','client:read','commande:read'])] 
     protected $email;  
     
     #[ORM\Column(type: 'string')] 
-    #[Groups(["write",'user:read:simple'])] 
+    #[Groups(["write",'user:read:simple','livreur:write','client:write','commande:read'])] 
     protected $password;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(["write",'user:read:simple','commande:read'])] 
+    #[Groups(["write",'user:read:simple','commande:read','zone:read','zone:write  ','livreur:read','livreur:write','livraison:read','client:write','client:read'])] 
     protected $prenom;
 
     #[ORM\Column(type: 'string', length: 255)]  
-    #[Groups(["write",'user:read:simple','commande:read'])] 
+    #[Groups(["write",'user:read:simple','commande:read','zone:read','livreur:read','livreur:write','livraison:read','client:write','client:read'])] 
        protected $nom;
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(["write",'user:read:simple','commande:read'])] 
+    #[Groups(["write",'user:read:simple','commande:read','zone:read','livreur:read','livreur:write','livraison:read','client:write','client:read'])] 
     protected $telephone;
 
-    #[ORM\Column(type: 'smallint',options:["default"=>1])]
+    #[ORM\Column(type: 'string',length: 255)]
+    #[Groups(['livreur:read','livreur:write','livraison:read','livraison:write'])] 
     protected $etat;
-
+    
     #[SerializedName("password")]
+    #[Groups(["write",'user:read:simple','livreur:write','client:write','commande:read'])] 
     protected $PlainPassword;
     
     #[ORM\Column(type: 'string', length: 255)]
     protected $token;
     
     #[ORM\Column(type: 'boolean')]
+    #[Groups(['livreur:read','livreur:write','livraison:read','livraison:write'])] 
     protected $is_enable;
     
     #[ORM\Column(type: 'datetime')]
@@ -194,12 +197,12 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
         return $this;
     }
 
-    public function getEtat(): ?int
+    public function getEtat(): ?string
     {
         return $this->etat;
     }
 
-    public function setEtat(int $etat): self
+    public function setEtat(string $etat): self
     {
         $this->etat = $etat;
 

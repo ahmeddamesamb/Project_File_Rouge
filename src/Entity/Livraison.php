@@ -2,14 +2,38 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\LivraisonRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use App\Entity\Commande;
+use App\Entity\Gestionaire;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\LivraisonRepository;
+use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\HttpFoundation\Response;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: LivraisonRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    collectionOperations:[
+        "get" =>[
+            "status" => Response::HTTP_OK,
+            "normalization_context" =>['groups' => ['livraison:read']]
+        ],
+            "post"=>[
+            "denormalization_context" =>['groups' => ['livraison:write']],
+        ]
+      ],
+        itemOperations: [
+            "put"=>[
+                // "security"=>"is_granted('ROLE_GESTIONAIRE')"
+                "security_message"=>"Access denied in this ressource"
+            ],
+            "get" =>[
+                    "status" => Response::HTTP_OK,
+                    "normalization_context" =>['groups' => ['livraison:read']],
+            ]
+        ]
+)]
 class Livraison
 {
     #[ORM\Id]
@@ -18,19 +42,27 @@ class Livraison
     private $id;
 
     #[ORM\Column(type: 'integer')]
+    #[Groups(['livraison:write','livreur:read','livreur:write'])]
     private $telephoneLivraison;
-
-    #[ORM\Column(type: 'boolean')]
-    private $etatLivraison="0";
+    
+    #[ORM\Column(type: 'string')]
+    #[Groups(['livraison:read','livreur:read','livreur:write'])]
+    private $etatLivraison="Commande en cours de Livraison";
 
     #[ORM\ManyToOne(targetEntity: Gestionaire::class, inversedBy: 'livraisons')]
     private $gestionaire;
 
     #[ORM\ManyToOne(targetEntity: Zone::class, inversedBy: 'livraisons')]
+    // #[Groups(['livraison:read','livraison:write'])]
     private $zone;
 
     #[ORM\OneToMany(mappedBy: 'livraison', targetEntity: Commande::class)]
+    #[Groups(['livraison:read','livraison:write','livreur:read','livreur:write'])]
     private $commandes;
+
+    #[ORM\ManyToOne(inversedBy: 'livraisons')]
+    #[Groups(['livraison:read','livraison:write'])]
+    private ?Livreur $livreur = null;
 
     public function __construct()
     {
@@ -54,12 +86,12 @@ class Livraison
         return $this;
     }
 
-    public function isEtatLivraison(): ?bool
+    public function isEtatLivraison(): ?string
     {
         return $this->etatLivraison;
     }
 
-    public function setEtatLivraison(bool $etatLivraison): self
+    public function setEtatLivraison(string $etatLivraison): self
     {
         $this->etatLivraison = $etatLivraison;
 
@@ -116,6 +148,18 @@ class Livraison
                 $commande->setLivraison(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getLivreur(): ?Livreur
+    {
+        return $this->livreur;
+    }
+
+    public function setLivreur(?Livreur $livreur): self
+    {
+        $this->livreur = $livreur;
 
         return $this;
     }

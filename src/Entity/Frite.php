@@ -36,7 +36,6 @@ class Frite extends Produit
 {
 
     #[ORM\OneToMany(mappedBy: 'frite', targetEntity: MenuFrite::class)]
-
     private $menuFrites;
 
     public function __construct()

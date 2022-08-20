@@ -42,11 +42,11 @@ class Tailleboisson
     #[Groups(['TailleBoisson:write','TailleBoisson:read','menu:read'])]
     private ?int $quantiteStock = null;
 
-    #[ORM\ManyToOne(inversedBy: 'tailleBoissons')]
+    #[ORM\ManyToOne(inversedBy: 'tailleBoissons',cascade:['persist'])]
     #[Groups(['TailleBoisson:write','TailleBoisson:read'])]
     private ?Taille $taille = null;
     
-    #[ORM\ManyToOne(inversedBy: 'tailleBoissons')]
+    #[ORM\ManyToOne(inversedBy: 'tailleBoissons',cascade:['persist'])]
     #[Groups(['TailleBoisson:write','TailleBoisson:read','menu:read'])]
     private ?Boisson $boisson = null;
 

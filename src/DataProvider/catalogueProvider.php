@@ -26,13 +26,13 @@ class catalogueProvider implements ContextAwareCollectionDataProviderInterface,R
 
         foreach($this->menu->findAll() as $menu )
         {
-            array_push($produit,$menu);
+            $produit[]=$menu;
+
         }
         foreach($this->burger->findAll() as $burger )
         {
-            array_push($produit,$burger);
+            $produit[]=$burger;
         }
-        
         return $produit;
     }
 

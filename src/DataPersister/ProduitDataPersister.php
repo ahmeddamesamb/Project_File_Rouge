@@ -39,8 +39,8 @@ class ProduitDataPersister implements ContextAwareDataPersisterInterface
     {
         if($data instanceof Menu){
 
-            if ($this->service->calculeprix($data)) {
-                $data->setPrix($this->service->calculeprix($data));
+            if ($this->service->Menuprix($data)) {
+                $data->setPrix($this->service->Menuprix($data));
                 $data->setGestionaire($this->token->getUser());
                 $this->entityManager->persist($data);
                 $this->entityManager->flush();
