@@ -11,7 +11,8 @@ use Symfony\Component\HttpFoundation\Response;
 use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
-
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 #[ApiResource(
     collectionOperations:[
         "get" =>[
@@ -33,6 +34,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
             ]
         ]
 )]
+#[ApiFilter(SearchFilter::class, properties: ['email' => 'exact'])]
 #[ORM\Entity(repositoryClass: ClientRepository::class)]
 
 class Client  extends User

@@ -42,11 +42,11 @@ class MenuTaille
     private ?int $quantity = null;
     
     #[ORM\ManyToOne(inversedBy: 'menutailles')]
-    #[Groups(['Menutaille:write','Menutaille:read'])]
+    #[Groups(['Menutaille:read'])]
     private ?Menu $menu = null;
     
     #[ORM\ManyToOne(inversedBy: 'menuTailles')]
-    #[Groups(['Menutaille:write','Menutaille:read','menu:write','menu:read'])]
+    #[Groups(['Menutaille:write','Menutaille:read','menu:read'])]
     private ?Taille $taille = null;
 
     public function getId(): ?int

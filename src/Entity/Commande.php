@@ -37,7 +37,7 @@ class Commande
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['commande:write','commande:read','boisson:read:simple','lignecommande:read','livraison:read','livraison:write','zone:write','zone:read','client:read'])] 
+    #[Groups(['commande:write','commande:read','boisson:read:simple','lignecommande:read','livreur:read','livraison:read','livraison:write','zone:write','zone:read','client:read'])] 
     private $id;
     
     #[ORM\Column(type: 'string',length:50)]
@@ -52,9 +52,6 @@ class Commande
     #[Groups(['boisson:read:simple','commande:read','commande:write','livraison:read','livraison:write','client:read','livreur:read','livreur:write','zone:read'])]
     private $dateCommande;
     
-    #[ORM\Column(type: 'string')]
-    #[Groups(['boisson:read:simple','commande:read','commande:write','client:read','livreur:read','livreur:write'])]
-    private $etatPaiement;
 
     #[ORM\Column(type: 'string',nullable:true)]
     #[Groups(['boisson:read:simple','zone:write','zone:read','client:read','livreur:read','livreur:write'])]
@@ -63,8 +60,6 @@ class Commande
     #[ORM\Column(type: 'integer',nullable:true)]
     private $paiement;
 
-    #[ORM\Column(type: 'integer',nullable:true)]
-    private $numeroTicket;
 
     #[ORM\ManyToOne(targetEntity: Gestionaire::class, inversedBy: 'commandes')]
     private $gestionaire;
@@ -90,6 +85,9 @@ class Commande
     #[ORM\ManyToOne(inversedBy: 'commandes')]
     #[Groups(['commande:read','commande:write'])]
     private ?Zone $zone = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $code = null;
 
 
     public function __construct()
@@ -141,17 +139,6 @@ class Commande
         return $this;
     }
 
-    public function isEtatPaiement(): ?string
-    {
-        return $this->etatPaiement;
-    }
-
-    public function setEtatPaiement(string $etatPaiement): self
-    {
-        $this->etatPaiement = $etatPaiement;
-
-        return $this;
-    }
 
     public function getStatutCommande(): ?string
     {
@@ -173,18 +160,6 @@ class Commande
     public function setPaiement(int $paiement): self
     {
         $this->paiement = $paiement;
-
-        return $this;
-    }
-
-    public function getNumeroTicket(): ?int
-    {
-        return $this->numeroTicket;
-    }
-
-    public function setNumeroTicket(int $numeroTicket): self
-    {
-        $this->numeroTicket = $numeroTicket;
 
         return $this;
     }
@@ -294,6 +269,18 @@ class Commande
     public function setZone(?Zone $zone): self
     {
         $this->zone = $zone;
+
+        return $this;
+    }
+
+    public function getCode(): ?int
+    {
+        return $this->code;
+    }
+
+    public function setCode(?int $code): self
+    {
+        $this->code = $code;
 
         return $this;
     }

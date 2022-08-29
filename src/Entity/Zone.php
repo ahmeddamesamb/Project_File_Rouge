@@ -37,11 +37,11 @@ class Zone
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['zone:write','zone:read','commande:read'])]
+    #[Groups(['zone:write','zone:read','commande:read','commande:write'])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['zone:write','zone:read','commande:read'])]
+    #[Groups(['zone:write','zone:read','commande:read','livraison:read','livreur:read'])]
     private $nomZone;
 
     #[ORM\Column(type: 'integer')]
@@ -49,7 +49,7 @@ class Zone
     private $coutLivraison;
 
     #[ORM\Column(type: 'string')]
-    #[Groups(['zone:write','zone:read','commande:read'])]
+    #[Groups(['zone:write','zone:read','commande:read','commande:write'])]
     private $etatZone;
 
     #[ORM\OneToMany(mappedBy: 'zone', targetEntity: Livraison::class)]

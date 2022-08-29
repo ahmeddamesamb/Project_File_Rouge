@@ -39,11 +39,11 @@ class MenuBurger
     private $id;
     
     #[ORM\Column(type: 'integer')]
-    #[Groups(['menu:read','Burger:read','MenuBurger:read'])]
+    #[Groups(['menu:read','menu:write','Burger:read','MenuBurger:read','MenuBurger:write'])]
     private $quantiteBurger;
     
     #[ORM\ManyToOne(targetEntity: Burger::class, inversedBy: 'menuBurgers')]
-    #[Groups(['menu:read','Burger:read','MenuBurger:read'])]
+    #[Groups(['menu:read','Burger:read','MenuBurger:read','MenuBurger:write'])]
     private $burger;
 
     #[ORM\ManyToOne(targetEntity: Menu::class, inversedBy: 'menuBurgers',cascade:['persist'])]

@@ -41,7 +41,7 @@ class Produit
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(["produit:write",'produit:read','Boisson:write','Boisson:read','Frite:write','Frite:read','zone:write','zone:read','Burger:write','Burger:read','menu:read','MenuFrite:read','MenuBurger:read','MenuTaille:read'])]
+    #[Groups(["produit:write",'produit:read','Boisson:write','Boisson:read','Frite:write','Frite:read','zone:write','zone:read','Burger:write','Burger:read','menu:read','menu:write','MenuFrite:read','MenuFrite:write','MenuBurger:read','MenuTaille:read','MenuTaille:write','MenuBurger:write'])]
     protected $id;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]

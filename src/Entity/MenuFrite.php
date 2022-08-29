@@ -41,14 +41,14 @@ class MenuFrite
     private $id;
 
     #[ORM\Column(type: 'integer')]
-    #[Groups(['menu:read','Frite:write','Frite:read','MenuFrite:read'])]
+    #[Groups(['menu:read','menu:write','Frite:write','Frite:read','MenuFrite:read','MenuFrite:write'])]
     private $quantiteFrite;
     
     #[ORM\ManyToOne(targetEntity: Menu::class, inversedBy: 'menuFrites',cascade:['persist'])]
     private $menu;
     
     #[ORM\ManyToOne(targetEntity: Frite::class, inversedBy: 'menuFrites')]
-    #[Groups(['menu:read','Frite:write','Frite:read','MenuFrite:read'])]
+    #[Groups(['menu:read','Frite:write','Frite:read','MenuFrite:read','MenuFrite:write'])]
     private $frite;
 
     public function getId(): ?int

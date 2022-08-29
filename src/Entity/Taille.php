@@ -37,7 +37,7 @@ class Taille
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['taille:write','taille:read','Menutaille:read','TailleBoisson:write','TailleBoisson:read','menu:read','menu:write'])]
+    #[Groups(['taille:write','taille:read','Menutaille:read','Menutaille:write','TailleBoisson:write','TailleBoisson:read','menu:read','menu:write'])]
     private ?int $id = null;
 
     #[ORM\Column]

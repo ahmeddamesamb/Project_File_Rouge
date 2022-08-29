@@ -31,6 +31,8 @@ class ProduitDataPersister implements ContextAwareDataPersisterInterface
     public function supports($data, array $context = []): bool
     {
         return $data instanceof Burger or $data instanceof Frite or $data instanceof Boisson or $data instanceof Menu;
+        // dd($data);
+
     }
     /**
      * @param Produit $data
@@ -39,6 +41,7 @@ class ProduitDataPersister implements ContextAwareDataPersisterInterface
     {
         if($data instanceof Menu){
 
+            // dd($data);
             if ($this->service->Menuprix($data)) {
                 $data->setPrix($this->service->Menuprix($data));
                 $data->setGestionaire($this->token->getUser());

@@ -17,9 +17,9 @@ class ServicePrix{
         foreach ($menu->getMenuFrites() as $menuFrites){
             $prix+=$menuFrites->getFrite()->getPrix()*$menuFrites->getQuantiteFrite();
         }
-        foreach ($menu->getMenutailles() as $menuTaille){
-            $prix+=$menuTaille->getTaille()->getPrix()*$menuTaille->getQuantity();
-        }
+        // foreach ($menu->getMenutailles() as $menuTaille){
+        //     $prix+=$menuTaille->getTaille()->getPrix()*$menuTaille->getQuantity();
+        // }
         
         return $prix;
     }
@@ -38,10 +38,10 @@ class ServicePrix{
                     $this->prix=$menuBurgers->getProduit()->getPrix()*($menuBurgers->getQuantite());
                     
                 }
-                foreach ($commande->getLigneCommandes() as $menuTaille){
-                    $this->prix=$menuTaille->getProduit()->getPrix()*($menuTaille->getQuantite());
+                // foreach ($commande->getLigneCommandes() as $menuTaille){
+                //     $this->prix=$menuTaille->getProduit()->getPrix()*($menuTaille->getQuantite());
                     
-                }
+                // }
                 return $this->prix;
            
         }

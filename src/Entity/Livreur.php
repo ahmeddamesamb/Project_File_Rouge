@@ -9,6 +9,8 @@ use Symfony\Component\HttpFoundation\Response;
 use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 #[ApiResource(
 
         collectionOperations:[
@@ -17,12 +19,12 @@ use Symfony\Component\Serializer\Annotation\Groups;
             "normalization_context" =>['groups' => ['livreur:read']]
         ],
             "post"=>[
-            // "denormalization_context" =>['groups' => ['livreur:write']],
+            "denormalization_context" =>['groups' => ['livreur:write']],
         ]
       ],
         itemOperations: [
             "put"=>[
-                "security"=>"is_granted('ROLE_GESTIONAIRE')",
+                // "security"=>"is_granted('ROLE_GESTIONAIRE')",
                 "security_message"=>"Access denied in this ressource"
             ],
             "get" =>[
@@ -31,12 +33,13 @@ use Symfony\Component\Serializer\Annotation\Groups;
             ]
         ]
 )]
+#[ApiFilter(SearchFilter::class, properties: ['email' => 'exact'])]
 #[ORM\Entity(repositoryClass: LivreurRepository::class)]
 class Livreur extends User
 {
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['livraison:read','livraison:write'])] 
+    #[Groups(['livraison:read','livreur:read'])] 
     private $matriculeMoto;
 
     #[ORM\ManyToOne(targetEntity: Gestionaire::class, inversedBy: 'livreurs')]
@@ -44,8 +47,12 @@ class Livreur extends User
     
     #[ORM\OneToMany(mappedBy: 'livreur', targetEntity: Livraison::class)]
     #[ApiSubresource()]
-    #[Groups(['livreur:read','livreur:write','livraison:read'])] 
+    #[Groups(['livreur:read','livraison:read'])] 
     private Collection $livraisons;
+    
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['livreur:read','livreur:write','livraison:read','livraison:write'])] 
+    private ?string $etatLivreur = null;
 
     public function __construct()
     {
@@ -100,6 +107,18 @@ class Livreur extends User
                 $livraison->setLivreur(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getEtatLivreur(): ?string
+    {
+        return $this->etatLivreur;
+    }
+
+    public function setEtatLivreur(?string $etatLivreur): self
+    {
+        $this->etatLivreur = $etatLivreur;
 
         return $this;
     }

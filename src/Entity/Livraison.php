@@ -39,6 +39,8 @@ class Livraison
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['livraison:read','livreur:read'])]
+
     private $id;
 
     #[ORM\Column(type: 'integer')]
@@ -53,7 +55,7 @@ class Livraison
     private $gestionaire;
 
     #[ORM\ManyToOne(targetEntity: Zone::class, inversedBy: 'livraisons')]
-    // #[Groups(['livraison:read','livraison:write'])]
+    #[Groups(['livraison:read','livraison:write','livreur:read'])]
     private $zone;
 
     #[ORM\OneToMany(mappedBy: 'livraison', targetEntity: Commande::class)]
